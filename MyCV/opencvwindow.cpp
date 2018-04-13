@@ -82,7 +82,7 @@ OpenCVWindow::OpenCVWindow(QWidget *parent) :
 
 	ui->pp3->installEventFilter(this);
 
-	Mat image= cv::imread( "/rong/tmp/abc.png",CV_BGR2GRAY);
+	Mat image= cv::imread( "/rong/tmp/demo.jpeg",CV_BGR2GRAY);
 
 	this->myCV.polygonfind( image );
 }

@@ -1,0 +1,12 @@
+{
+"buttons":[{ "text":"Project", "icon":"32" },{ "text":"Function", "icon":"33" },
+		   { "text":"Admin", "icon":"31" },{ "text":"Explore", "icon":"34" }],
+"trees":[{ "text":"Image_Stitching","tooltip":"1", "icon":"32" },{ "text":"Advanced_Edge_Detection", "icon":"33" },
+			{ "text":"Colour_Segmentation", "icon":"31" },{ "text":"Colour_Transfer", "icon":"34" },
+			{ "text":"Colour_Segmentation", "icon":"31" },{ "text":"Edge_Detection", "icon":"34" },
+			{ "text":"Histogram_Equalization", "icon":"31" },{ "text":"Harris_Corner_Detector", "icon":"34" },
+			{ "text":"Image_Sharpening", "icon":"31" },{ "text":"Image_Smoothing", "icon":"34" },
+			{ "text":"Image_Stitching", "icon":"31" },{ "text":"Point_Operations_on_Digital_Images", "icon":"34" },
+			{ "text":"seam_carving", "icon":"31" },{ "text":"Image_Smoothing", "icon":"34" },
+			{ "text":"Text_Read", "icon":"31" },{ "text":"Image_Smoothing", "icon":"34" }]
+}

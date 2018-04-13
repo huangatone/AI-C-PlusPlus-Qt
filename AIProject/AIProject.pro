@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-01-15T11:48:54
+# Project created by QtCreator 2018-03-12T13:52:43
 #
 #-------------------------------------------------
 
@@ -8,27 +8,8 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = OpenTest
+TARGET = OpenDetect
 TEMPLATE = app
-
-
-Release:DESTDIR = /rong/project/MyDev/bin/release
-Debug:DESTDIR = /rong/project/MyDev/bin/debug
-
-OBJECTS_DIR = /rong/project/MyDev/bin/obj
-MOC_DIR = /rong/project/MyDev/bin/moc
-RCC_DIR =/rong/project/MyDev/bin/qrc
-UI_DIR =/rong/project/MyDev/bin/u
-
-CONFIG += debug_and_release
-
-
-
-CONFIG(debug, debug|release) {
-    DESTDIR = /rong/project/MyDev/bin/debug
-} else {
-    DESTDIR = /rong/project/MyDev/bin/release
-}
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -42,45 +23,39 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-SOURCES +=         main.cpp \
-    colordetector.cpp \
+SOURCES += \
+        main.cpp \     
     cvfunction.cpp \
-    dfhtmltable.cpp \
-    dfpixmapwdiget.cpp \
-    dfsplitter.cpp \   
-    mainwindow.cpp \   
-    opencvwindow.cpp \
-    rgbeditor.cpp
+    mlfunction.cpp \
+    textareadetect.cpp \ 
+    iconbutton.cpp \
+    stylewindow.cpp \
+    tessractfunction.cpp
 
-HEADERS +=     opencvwindow.h \
-    colordetector.h \
-    colorhistogram.h \
+HEADERS += \ 
     cvfunction.h \
-    dfhtmltable.h \
-    dfpixmapwdiget.h \
-    dfsplitter.h \
-    imageComparator.h \
-    laplacianZC.h \
-    mainwindow.h \
-    morphoFeatures.h \
-    objectFinder.h \
-    opencvwindow.h \
-    rgbeditor.h
+    mlfunction.h \
+    textareadetect.h \ 
+    iconbutton.h \
+    stylewindow.h \
+    tessractfunction.h
 
 FORMS += \
-        mainwindow.ui \
-    dfpixmapwdiget.ui \
-    opencvwindow.ui \
-    rgbeditor.ui
+    iconbutton.ui \
+    stylewindow.ui
 
-RESOURCES +=   cvrc.qrc
-
-INCLUDEPATH += $$(opencv)/include
-
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
+INCLUDEPATH += /rong/lib/include
 
 INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include
 
+
+
+
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
 
 INCLUDEPATH += /rong/lib_github/brew/include
 DEPENDPATH += /rong/lib_github/brew/include
@@ -128,11 +103,6 @@ LIBS += -L/rong/lib_github/brew/lib/ -lopencv_ximgproc
 LIBS += -L/rong/lib_github/brew/lib/ -lopencv_xobjdetect
 LIBS += -L/rong/lib_github/brew/lib/ -ltbb
 
+LIBS += -L/rong/lib_github/brew/lib/ -ltesseract -llept
 
-mac {
- RC_FILE = aa.icns
-}
 
-win32 {
- RC_FILE = aa.rc
-}
