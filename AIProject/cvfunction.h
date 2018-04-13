@@ -96,6 +96,10 @@ Mat seam_carving(Mat img, Size out_size);
 
 Mat seam_carving(QString f_n);
 
+//find rectangle and circle
+
+Mat make_rect_circle(QString f_n);
+
 //设置迭代条件
 inline TermCriteria TC(int iters, double eps)
 {

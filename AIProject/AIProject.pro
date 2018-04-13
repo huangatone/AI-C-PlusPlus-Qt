@@ -30,7 +30,8 @@ SOURCES += \
     textareadetect.cpp \ 
     iconbutton.cpp \
     stylewindow.cpp \
-    tessractfunction.cpp
+    tessractfunction.cpp \
+    pictureview.cpp
 
 HEADERS += \ 
     cvfunction.h \
@@ -38,11 +39,13 @@ HEADERS += \
     textareadetect.h \ 
     iconbutton.h \
     stylewindow.h \
-    tessractfunction.h
+    tessractfunction.h \
+    pictureview.h
 
 FORMS += \
     iconbutton.ui \
-    stylewindow.ui
+    stylewindow.ui \
+    pictureview.ui
 
 INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include

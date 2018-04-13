@@ -645,7 +645,8 @@ QImage CVFunction::Mat2QImage1(const Mat &result)
 	QImage img_qt = QImage((const unsigned char*)result.data,result.cols, result.rows, result.step, QImage::Format_RGB888);
 
 	//For Binary Images
-	if (img_qt.isNull()){
+	if (img_qt.isNull())
+	{
 		//ColorTable for Binary Images
 		QVector<QRgb> colorTable;
 		for (int i = 0; i < 256; i++)
@@ -653,7 +654,7 @@ QImage CVFunction::Mat2QImage1(const Mat &result)
 
 		img_qt = QImage((const unsigned char*)result.data,result.cols, result.rows, QImage::Format_Indexed8);
 		img_qt.setColorTable(colorTable);
-		}
+	}
 
 	return img_qt.rgbSwapped();
 }
@@ -3022,4 +3023,83 @@ Mat seam_carving(QString f_n)
 	//waitKey(0);
 
 	return out;
+}
+
+Mat make_rect_circle(QString f_n)
+{
+	CVFunction cv;
+	cv::Mat src = imread(f_n.toStdString());
+	cv::Mat gray;
+	cv::Mat bw;
+	cv::Mat dst;
+	std::vector<std::vector<cv::Point> > contours;
+	std::vector<cv::Point> approx;
+
+	// Convert to grayscale
+	cv::cvtColor(src, gray, CV_BGR2GRAY);
+
+	// Use Canny instead of threshold to catch squares with gradient shading
+	blur( gray, bw, Size(3,3) );
+	cv::Canny(gray, bw, 80, 240, 3);
+
+	//cv::bitwise_not(bw, bw);
+
+	// Find contours
+	cv::findContours(bw.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+
+	src.copyTo(dst);
+
+	for (int i = 0; i < contours.size(); i++)
+	{
+		// Approximate contour with accuracy proportional
+		// to the contour perimeter
+		cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true)*0.02, true);
+
+		// Skip small or non-convex objects
+		if (std::fabs(cv::contourArea(contours[i])) < 100 || !cv::isContourConvex(approx))
+			continue;
+
+		if (approx.size() == 3)
+		{
+			cv.setLabel(dst, "TRI", contours[i]);    // Triangles
+		}
+		else if (approx.size() >= 4 && approx.size() <= 6)
+		{
+			// Number of vertices of polygonal curve
+			int vtc = approx.size();
+
+			// Get the cosines of all corners
+			std::vector<double> cos;
+			for (int j = 2; j < vtc+1; j++)
+				cos.push_back(angle(approx[j%vtc], approx[j-2], approx[j-1]));
+
+			// Sort ascending the cosine values
+			std::sort(cos.begin(), cos.end());
+
+			// Get the lowest and the highest cosine
+			double mincos = cos.front();
+			double maxcos = cos.back();
+
+			// Use the degrees obtained above and the number of vertices
+			// to determine the shape of the contour
+			if (vtc == 4 )
+				cv.setLabel(dst, "RECT", contours[i]);
+			else if (vtc == 5 )
+				cv.setLabel(dst, "PENTA", contours[i]);
+			else if (vtc == 6 )
+				cv.setLabel(dst, "HEXA", contours[i]);
+		}
+		else
+		{
+			// Detect and label circles
+			double area = cv::contourArea(contours[i]);
+			cv::Rect r = cv::boundingRect(contours[i]);
+			int radius = r.width / 2;
+
+			if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
+				std::abs(1 - (area / (CV_PI * (radius*radius)))) <= 0.2)
+				cv.setLabel(dst, "CIR", contours[i]);
+		}
+	}
+	return dst;
 }

@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QScrollArea>
 #include <QMessageBox>
+#include "pictureview.h"
 
 StyleWindow::StyleWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -40,7 +41,7 @@ StyleWindow::StyleWindow(QWidget *parent) :
 	connect( ui->iconbtn3, SIGNAL(clicked()), this, SLOT(on_icon_buttun_clicked()));
 	connect( ui->iconbtn4, SIGNAL(clicked()), this, SLOT(on_icon_buttun_clicked()));
 
-	QFile f("/rong/lib/opencv.json");
+	QFile f("opencv.json");
 	if(f.open(QIODevice::ReadOnly))
 	{
 		initButtons( f.readAll());
@@ -261,6 +262,13 @@ void StyleWindow::on_btnDo_clicked()
 	{
 		onseam_carving(t1);
 	}
+	else if( cmd.compare("getArea",Qt::CaseInsensitive) == 0 )
+	{
+		//onGetArea(t1);
+
+		auto out = make_rect_circle( t1);
+		displayResult(out);
+	}
 
 }
 
@@ -297,15 +305,12 @@ void StyleWindow::setFileName(QLabel* p)
 	if(fi == "")
 		return;
 	p->setText(fi);
-	QScrollArea *area = new QScrollArea (this);
-	area->setWidgetResizable(false);
-	QLabel * lb = new QLabel (this);
-	lb->setPixmap( QPixmap(fi));
 
-	area->setWidget(lb);
+	PictureView* view = new PictureView(this);
+	view->setFile(fi);
 
-	ui->mdiArea->addSubWindow(area);
-	area->show();
+	ui->mdiArea->addSubWindow(view);
+	view->show();
 }
 
 void StyleWindow::displayResult(Mat &m)
@@ -318,6 +323,8 @@ void StyleWindow::displayResult(Mat &m)
 	QImage img = cv.Mat2QImage(m);
 	if(img.isNull())
 		img = cv.Mat2QImage1(m);
+	if(img.isNull())
+		return;
 	QPixmap pix = QPixmap::fromImage( img);
 	lb->setPixmap( pix);
 

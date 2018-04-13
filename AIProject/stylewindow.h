@@ -102,6 +102,9 @@ private:
 
 	//seam carving;
 	void onseam_carving(QString f_n);
+
+	//seam carving;
+	//void onGetArea(QString f_n);
 };
 
 #endif // STYLEWINDOW_H
