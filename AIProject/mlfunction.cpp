@@ -289,11 +289,11 @@ int MLFunction::NumberFunction()
 
 	Mat srcGray;
 	cv::cvtColor(src, srcGray,COLOR_RGB2GRAY);
-	_CVFun.Mat2QImage1(srcGray).save("/rong/outpng/gray.png");
+	//_CVFun.Mat2QImage1(srcGray).save("/rong/outpng/gray.png");
 	Mat bl;
 	//blur( srcGray, bl, Size(5,5) );
 	cv::GaussianBlur(srcGray,bl,Size(5,5),0);
-	_CVFun.Mat2QImage1(bl).save("/rong/outpng/blue.png");
+	//_CVFun.Mat2QImage1(bl).save("/rong/outpng/blue.png");
 	Mat threMat;
 	//阈值化操作
 	threshold(srcGray, threMat, 100, 255, THRESH_BINARY);
@@ -359,7 +359,7 @@ int MLFunction::NumberFunction()
 
 	}
 
-	_CVFun.Mat2QImage(drawing).save("/rong/outpng/result.png");
+	//_CVFun.Mat2QImage(drawing).save("/rong/outpng/result.png");
 
 
 	//3.数字顺序整理：
@@ -380,7 +380,7 @@ int MLFunction::NumberFunction()
 
 		   Mat t;
 		   src(ltRect[j]).copyTo(t);
-		   _CVFun.Mat2QImage1(t).save( QString("/rong/outpng/result_%1.png").arg(j));
+		   //_CVFun.Mat2QImage1(t).save( QString("/rong/outpng/result_%1.png").arg(j));
 		   cvtColor(t, t, COLOR_BGR2GRAY);
 		   threshold(t, t, 48, 255, CV_THRESH_BINARY_INV);
 		   deal(t,j+1);
@@ -767,11 +767,11 @@ int MLFunction::findNumber()
 
 	Mat srcGray;
 	cv::cvtColor(src, srcGray,COLOR_RGB2GRAY);
-	cf.Mat2QImage1(srcGray).save("/rong/outpng/gray.png");
+	imwrite("/rong/outpng/gray.png",srcGray);
 	Mat bl;
 	//blur( srcGray, bl, Size(5,5) );
 	cv::GaussianBlur(srcGray,bl,Size(5,5),0);
-	cf.Mat2QImage1(bl).save("/rong/outpng/blue.png");
+	imwrite("/rong/outpng/blue.png",bl);
 	Mat threMat;
 	//阈值化操作
 	threshold(srcGray, threMat, 100, 255, THRESH_BINARY);
@@ -817,7 +817,7 @@ int MLFunction::findNumber()
 
 	}
 
-	cf.Mat2QImage(drawing).save("/rong/outpng/result.png");
+	//cf.Mat2QImage(drawing).save("/rong/outpng/result.png");
 
 
 	//3.数字顺序整理：
@@ -838,7 +838,7 @@ int MLFunction::findNumber()
 
 		   Mat t;
 		   src(ltRect[j]).copyTo(t);
-		   cf.Mat2QImage1(t).save( QString("/rong/outpng/result_%1.png").arg(j));
+		   //cf.Mat2QImage1(t).save( QString("/rong/outpng/result_%1.png").arg(j));
 		   cvtColor(t, t, COLOR_BGR2GRAY);
 		   threshold(t, t, 48, 255, CV_THRESH_BINARY_INV);
 		   deal(t,j+1);

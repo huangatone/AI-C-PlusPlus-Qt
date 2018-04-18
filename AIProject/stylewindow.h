@@ -34,8 +34,10 @@ public:
 	void initButtons(QString str, int i);
 	void initTree(QString str, int i);
 
+	void addSubWindow(QWidget* w);
+
 protected slots:
-	void on_icon_buttun_clicked();
+	void slot_icon_buttun_clicked();
 private slots:
 	void on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column);
 
@@ -51,12 +53,14 @@ private slots:
 
 	void on_btnFile4_clicked();
 
+	void on_horizontalScrollBar_sliderMoved(int position);
+
 private:
 	Ui::StyleWindow *ui;
 
 
 	void setFileName(QLabel* p);
-	void displayResult(Mat &m);
+	void displayResult(Mat &m,QString title = "NoTitle");
 
 
 

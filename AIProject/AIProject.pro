@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = OpenDetect
+TARGET = ImageApp
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -31,7 +31,10 @@ SOURCES += \
     iconbutton.cpp \
     stylewindow.cpp \
     tessractfunction.cpp \
-    pictureview.cpp
+    pictureview.cpp \
+    tourist.cpp \
+    cvpictureview.cpp \
+    dealview.cpp
 
 HEADERS += \ 
     cvfunction.h \
@@ -40,12 +43,17 @@ HEADERS += \
     iconbutton.h \
     stylewindow.h \
     tessractfunction.h \
-    pictureview.h
+    pictureview.h \
+    tourist.h \
+    cvpictureview.h \
+    dealview.h
 
 FORMS += \
     iconbutton.ui \
     stylewindow.ui \
-    pictureview.ui
+    pictureview.ui \
+    cvpictureview.ui \
+    dealview.ui
 
 INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include
@@ -107,5 +115,11 @@ LIBS += -L/rong/lib_github/brew/lib/ -lopencv_xobjdetect
 LIBS += -L/rong/lib_github/brew/lib/ -ltbb
 
 LIBS += -L/rong/lib_github/brew/lib/ -ltesseract -llept
+
+DISTFILES += \
+    opencv.json
+
+RESOURCES += \
+    ai.qrc
 
 

@@ -444,7 +444,7 @@ QImage CVFunction::find_edge(int max_thresh ,	int thresh,Mat srcImage)
 
 
 
-QImage CVFunction::find_sharp(Mat srcImage)
+Mat CVFunction::find_sharp(Mat srcImage)
 {
 	cv::Mat src= srcImage;
 	cv::Mat gray;
@@ -532,18 +532,20 @@ QImage CVFunction::find_sharp(Mat srcImage)
 		}
 	}
 
-	return Mat2QImage(dst);
+	return dst;
 
 }
 
 
-QImage CVFunction::find_sharp2(Mat srcImage)
+Mat CVFunction::find_sharp2(Mat srcImage)
 {
 	qDebug() << "sharp2";
 	Mat srcTemp = srcImage.clone();
 	cv::Mat srcGray;
 	cvtColor(srcImage, srcGray, CV_BGR2GRAY);
 	blur(srcGray, srcGray, Size(3, 3));
+
+	Mat2QImage1(srcGray).save("gray.png");
 
 	int thresh = 100;
 	int max_thresh = 255;
@@ -558,6 +560,8 @@ QImage CVFunction::find_sharp2(Mat srcImage)
 	//轮廓检测
 	findContours(threMat, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	//凸包及缺陷检测参数
+	Mat2QImage1(threMat).save("threMat.png");
+
 	vector<vector<Point> > pointHull(contours.size());
 	vector<vector<int> > intHull(contours.size());
 	vector<vector<Vec4i> > hullDefect(contours.size());
@@ -572,6 +576,8 @@ QImage CVFunction::find_sharp2(Mat srcImage)
 	}
 	//绘制凸包及缺陷检测
 	Mat drawing = Mat::zeros(threMat.size(), CV_8UC1);
+	Mat2QImage1(drawing).save("drawing.png");
+
 	for (size_t i = 0; i < contours.size(); i++)
 	{
 		Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
@@ -612,8 +618,9 @@ QImage CVFunction::find_sharp2(Mat srcImage)
 	}
 qDebug() << "sharp2 end";
 //imshow("result", drawing);
+wait(0);
 //todo: return threright picture;
-	return Mat2QImage1(drawing);
+	return drawing;
 }
 
 
@@ -1922,10 +1929,10 @@ Mat Advanced_Edge_Detection(QString file_name, QString dir_name)
 	// Apply the Canny Edge Detection algorithm
 	Canny(img.clone(), imgCanny, 200, 230);
 
-	CVFunction cd;
-	cd.Mat2QImage(img).save( dir_name+ "s_orig.png");
-	cd.Mat2QImage(imgLaplacian).save( dir_name + "laplacian.png");
-	cd.Mat2QImage1(imgCanny).save( dir_name + "canny.png");
+
+	imwrite( dir_name.toStdString()+ "s_orig.png",img);
+	imwrite( dir_name.toStdString() + "laplacian.png",imgLaplacian);
+	imwrite( dir_name.toStdString() + "canny.png",imgCanny);
 	//imshow("Original Image", img);
 	//imshow("Laplacian Edges", imgLaplacian);
 	//imshow("Canny Edges", imgCanny);

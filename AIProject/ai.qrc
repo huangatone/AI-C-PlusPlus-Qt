@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/file_add.png</file>
+        <file>icon/file_del.png</file>
+        <file>icon/task_run.png</file>
+        <file>icon/file_refresh.png</file>
+        <file>icon/run_opencv.png</file>
+    </qresource>
+</RCC>

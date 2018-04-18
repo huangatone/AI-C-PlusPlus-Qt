@@ -10,7 +10,10 @@
 #include <QFileDialog>
 #include <QScrollArea>
 #include <QMessageBox>
+#include <QMdiSubWindow>
 #include "pictureview.h"
+#include "cvpictureview.h"
+#include "dealview.h"
 
 StyleWindow::StyleWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -36,16 +39,21 @@ StyleWindow::StyleWindow(QWidget *parent) :
 	blank_w->setMinimumWidth(50);
 	ui->toolBar->insertWidget( ui->actionOpen,blank_w);
 
-	connect( ui->iconbtn1, SIGNAL(clicked()), this, SLOT(on_icon_buttun_clicked()));
-	connect( ui->iconbtn2, SIGNAL(clicked()), this, SLOT(on_icon_buttun_clicked()));
-	connect( ui->iconbtn3, SIGNAL(clicked()), this, SLOT(on_icon_buttun_clicked()));
-	connect( ui->iconbtn4, SIGNAL(clicked()), this, SLOT(on_icon_buttun_clicked()));
+	connect( ui->iconbtn1, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
+	connect( ui->iconbtn2, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
+	connect( ui->iconbtn3, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
+	connect( ui->iconbtn4, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
 
 	QFile f("opencv.json");
 	if(f.open(QIODevice::ReadOnly))
 	{
 		initButtons( f.readAll());
 	}
+
+	DealView *pView = new DealView (this);
+	auto a = ui->mdiArea->addSubWindow(pView);
+	a->setWindowTitle("Test View");
+	pView->show();
 
 }
 
@@ -56,7 +64,7 @@ StyleWindow::~StyleWindow()
 
 void StyleWindow::initButtons(QString str)
 {
-	qDebug() <<"my god";
+	//qDebug() <<"my god";
 	QJsonDocument doc = QJsonDocument::fromJson( str.toUtf8());
 	auto obj = doc.object();
 	auto btn_objs = obj["buttons"];
@@ -93,7 +101,7 @@ void StyleWindow::initButtons(QString str, int i) {}
 void StyleWindow::initTree(QString str, int i) {}
 
 
-void StyleWindow::on_icon_buttun_clicked()
+void StyleWindow::slot_icon_buttun_clicked()
 {
 	IconButton* btn = qobject_cast<IconButton*>( sender());
 	if(btn)
@@ -262,12 +270,32 @@ void StyleWindow::on_btnDo_clicked()
 	{
 		onseam_carving(t1);
 	}
-	else if( cmd.compare("getArea",Qt::CaseInsensitive) == 0 )
+	else if( cmd.compare("make_rect_circle",Qt::CaseInsensitive) == 0 )
 	{
 		//onGetArea(t1);
 
 		auto out = make_rect_circle( t1);
 		displayResult(out);
+	}
+	else if( cmd.compare("find_sharp",Qt::CaseInsensitive) == 0)
+	{
+		CVFunction cv;
+		Mat m = imread(t1.toStdString());
+		auto d = cv.find_sharp2(m);
+		displayResult(d, "sharp2");
+		//d = cv.find_sharp(m);
+		//displayResult(d, "sharp1");
+		//QMessageBox::warning(this, "Error", "Not such functions");
+	}
+	else if(cmd.compare("Seamless",Qt::CaseInsensitive) == 0)
+	{
+		Tourist t;
+		//t.test("rong/testfile/p1.png","rong/testfile/dst.png","rong/testfile/src.png");
+		t.Seamless_Clone(t1,t2,t3);
+	}
+	else
+	{
+
 	}
 
 }
@@ -313,23 +341,30 @@ void StyleWindow::setFileName(QLabel* p)
 	view->show();
 }
 
-void StyleWindow::displayResult(Mat &m)
+void StyleWindow::displayResult(Mat &m,QString title)
 {
 	QScrollArea *area = new QScrollArea (this);
 	area->setWidgetResizable(false);
 	QLabel * lb = new QLabel (this);
-	CVFunction cv;
 
-	QImage img = cv.Mat2QImage(m);
-	if(img.isNull())
-		img = cv.Mat2QImage1(m);
-	if(img.isNull())
-		return;
-	QPixmap pix = QPixmap::fromImage( img);
+	imwrite(title.toStdString() + ".png",m);
+	QPixmap pix("tmp.png");
+
 	lb->setPixmap( pix);
 
 	area->setWidget(lb);
 
-	ui->mdiArea->addSubWindow(area);
+	auto a = ui->mdiArea->addSubWindow(area);
+	a->setWindowTitle(title);
 	area->show();
+}
+
+void StyleWindow::on_horizontalScrollBar_sliderMoved(int position)
+{
+
+}
+
+void StyleWindow::addSubWindow(QWidget* w)
+{
+	auto a = ui->mdiArea->addSubWindow(w);
 }

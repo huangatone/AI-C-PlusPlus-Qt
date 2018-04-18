@@ -10,6 +10,8 @@
 using namespace std;
 using namespace cv;
 
+//ToList: sharp detect
+
 /*
  *
  *
@@ -115,14 +117,11 @@ public:
 	//find all edge
 	QImage find_edge(int max_thresh ,	int thresh ,Mat srcImage);
 	//find circle and rectangle and 6-sides sharp
-	QImage find_sharp(Mat srcImage);
+	Mat find_sharp(Mat srcImage);//no good
 
-	QImage find_sharp2(Mat srcImage);
+	Mat find_sharp2(Mat srcImage);
 
-	// Mat to image, CV_8UC3 format
-	QImage Mat2QImage(const cv::Mat &mat);
-	// Mat to image, CV_8UC1 format
-	QImage Mat2QImage1(const cv::Mat &mat);
+
 
 	void salt(Mat &image, int n);
 	void colorReduce0(cv::Mat &image, int div);
@@ -162,6 +161,10 @@ public:
 	std::vector<std::vector<cv::Point> > findSquaresInImage(cv::Mat _image);
 
 private:
+	// Mat to image, CV_8UC3 format
+	QImage Mat2QImage(const cv::Mat &mat);
+	// Mat to image, CV_8UC1 format
+	QImage Mat2QImage1(const cv::Mat &mat);
 
 	void (*callbackFunc)(QPointF point);
 

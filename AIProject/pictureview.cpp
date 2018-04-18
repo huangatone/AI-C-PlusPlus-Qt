@@ -97,7 +97,7 @@ void PictureView::setFile(const QString &file)
 	setImage(file);
 
 	QFileInfo pix_file(file);
-	qDebug() << pix_file.absolutePath() ;
+	//qDebug() << pix_file.absolutePath() ;
 
 	_dir = QDir (pix_file.absolutePath());
 
