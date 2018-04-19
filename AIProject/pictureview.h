@@ -25,13 +25,17 @@ public:
 	void setFile(const QString &file);
 
 private slots:
-	void on_btnZoomIn_clicked();
 
-	void on_btnZoomOut_clicked();
-
-	void on_btnPre_clicked();
 
 	void on_btnNext_clicked();
+
+	void on_horizontalSlider_sliderMoved(int position);
+
+	void on_btnPVZoomIn_clicked();
+
+	void on_btnPVZoomOut_clicked();
+
+	void on_btnPVZoom_clicked();
 
 private:
 
@@ -41,10 +45,9 @@ private:
 	QLabel* lb;
 	QPixmap _img;
 
-	QDir _dir;
+
 	QString _file;
-	QFileInfoList _list;
-	int _current_index;
+
 };
 
 #endif // PICTUREVIEW_H

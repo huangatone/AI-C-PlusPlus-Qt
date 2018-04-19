@@ -30,6 +30,11 @@ public:
 
 	Mat  addImage(QString f1, QString f2, double a, double b );
 
+	Mat onBlue(QString src, int len);
+	Mat onGaussianBlur(QString src,int len);
+	Mat onMedianBlur(QString src,int len);
+	Mat onBilateralFilter(QString src,int len);
+
 	//static void onCandyTrackbar(int, void* p);
 	//int doCanny();
 

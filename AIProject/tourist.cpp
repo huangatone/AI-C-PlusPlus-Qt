@@ -11,35 +11,82 @@ Tourist::Tourist()
 
 }
 
-Mat  Tourist::addImage( QString f1, QString f2,double a, double b )
+Mat  Tourist::addImage(QString f1, QString f2,double a, double b)
 {
    double alpha = 0.5; double beta; double input;
    Mat src1, src2, dst;
 
-   src1 = imread( f1.toStdString() );
-   src2 = imread( f2.toStdString() );
-   if( src1.empty() ) { qDebug() << "Error loading src1" << f1; return Mat(); }
-   if( src2.empty() ) { qDebug() << "Error loading src2" << f2; return Mat(); }
+   src1 = imread(f1.toStdString());
+   src2 = imread(f2.toStdString());
+   if(src1.empty()) { qDebug() << "Error loading src1" << f1; return Mat(); }
+   if(src2.empty()) { qDebug() << "Error loading src2" << f2; return Mat(); }
 
-   int col = qMin( src1.cols, src2.cols);
-   int row = qMin( src1.rows, src2.rows);
+   int col = qMin(src1.cols, src2.cols);
+   int row = qMin(src1.rows, src2.rows);
 
    Mat m1 = src1(Range(0,row), Range(0,col));
    Mat m2 = src2(Range(0,row), Range(0,col));
-   beta = ( 1.0 - alpha );
-   addWeighted( m1, a, m2, b, 0.0, dst);
-   //imshow( "Linear Blend", dst );
+   beta = (1.0 - alpha);
+   addWeighted(m1, a, m2, b, 0.0, dst);
+   //imshow("Linear Blend", dst);
    //imwrite("/rong/testfile/r1.png", src1);
    //imwrite("/rong/testfile/r2.png", src2);
    //waitKey(0);
    //RNG rng(12345);
    //cv::Mat imageROI= dst(cv::Rect(110,260,35,40));
-   //Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-   //rectangle( imageROI, Point(2,2), Point(20,20), color, 2, 8, 0 );
-   //circle(  imageROI, center[i], (int)radius[i], color, 2, 8, 0 );
+   //Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255));
+   //rectangle(imageROI, Point(2,2), Point(20,20), color, 2, 8, 0);
+   //circle( imageROI, center[i], (int)radius[i], color, 2, 8, 0);
 
 
    return dst;
+}
+
+int MAX_KERNEL_LENGTH = 31;
+
+Mat Tourist::onBlue(QString src_file,int len)
+{
+	Mat src = imread(src_file.toStdString(), IMREAD_COLOR);
+	Mat dst;
+	//for (int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2)
+	{
+		cv::blur(src, dst, Size(len, len), Point(-1,-1));
+	}
+	return dst;
+}
+
+Mat Tourist::onGaussianBlur(QString src_file,int len)
+{
+	Mat src = imread(src_file.toStdString(), IMREAD_COLOR);
+	Mat dst;
+	//for(int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2)
+	{
+		cv::GaussianBlur(src, dst, Size(len, len), 0, 0);
+	}
+
+	return dst;
+}
+
+Mat Tourist::onMedianBlur(QString src_file,int len)
+{
+	Mat src = imread(src_file.toStdString(), IMREAD_COLOR);
+	Mat dst;
+	//for (int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2)
+	{
+		cv::medianBlur (src, dst, len);
+	}
+	return dst;
+}
+
+Mat Tourist::onBilateralFilter(QString src_file,int len)
+{
+	Mat src = imread(src_file.toStdString(), IMREAD_COLOR);
+	Mat dst;
+	//for (int i = 1; i < MAX_KERNEL_LENGTH; i = i + 2)
+	{
+		cv::bilateralFilter (src, dst, len, len*2, len/2);
+	}
+	return dst;
 }
 
 Mat Tourist::onCandy(QString f_n,int iThresh)
@@ -86,7 +133,7 @@ Mat Tourist::onChangeThresh(int iThresh)
 }
 
 
-Mat Tourist::random_kmeans( )
+Mat Tourist::random_kmeans()
 {
 	const int MAX_CLUSTERS = 5;
 	Scalar colorTab[] =
@@ -111,7 +158,7 @@ Mat Tourist::random_kmeans( )
 		std::vector<Point2f> centers;
 
 		/* generate random sample from multigaussian distribution */
-		for( k = 0; k < clusterCount; k++ )
+		for(k = 0; k < clusterCount; k++)
 		{
 			Point center;
 			center.x = rng.uniform(0, img.cols);
@@ -125,28 +172,28 @@ Mat Tourist::random_kmeans( )
 		randShuffle(points, 1, &rng);
 
 		double compactness = kmeans(points, clusterCount, labels,
-			TermCriteria( TermCriteria::EPS+TermCriteria::COUNT, 10, 1.0),
+			TermCriteria(TermCriteria::EPS+TermCriteria::COUNT, 10, 1.0),
 			   3, KMEANS_PP_CENTERS, centers);
 
 		img = Scalar::all(0);
 
-		for( i = 0; i < sampleCount; i++ )
+		for(i = 0; i < sampleCount; i++)
 		{
 			int clusterIdx = labels.at<int>(i);
 			Point ipt = points.at<Point2f>(i);
-			circle( img, ipt, 2, colorTab[clusterIdx], FILLED, LINE_AA );
+			circle(img, ipt, 2, colorTab[clusterIdx], FILLED, LINE_AA);
 		}
 		for (i = 0; i < (int)centers.size(); ++i)
 		{
 			Point2f c = centers[i];
-			circle( img, c, 40, colorTab[i], 1, LINE_AA );
+			circle(img, c, 40, colorTab[i], 1, LINE_AA);
 		}
 		cout << "Compactness: " << compactness << endl;
 
 		//imshow("clusters", img);
 
 		//char key = (char)waitKey();
-		//if( key == 27 || key == 'q' || key == 'Q' ) // 'ESC'
+		//if(key == 27 || key == 'q' || key == 'Q') // 'ESC'
 		//	;
 	}
 
@@ -161,7 +208,7 @@ Mat Tourist::segmentation()
 
 	resize(img0, img, Size(640, 640*img0.rows/img0.cols), 0, 0, INTER_LINEAR_EXACT);
 
-	if( fgimg.empty() )
+	if(fgimg.empty())
 	  fgimg.create(img.size(), img.type());
 
 	Ptr<BackgroundSubtractor> bg_model =
@@ -170,9 +217,9 @@ Mat Tourist::segmentation()
 
 	//update the model
 	bg_model->apply(img, fgmask,  0);
-	//if( smoothMask )
+	//if(smoothMask)
 	{
-		GaussianBlur(fgmask, fgmask, Size(11, 11), 3.5, 3.5);
+		cv::GaussianBlur(fgmask, fgmask, Size(11, 11), 3.5, 3.5);
 		threshold(fgmask, fgmask, 10, 255, THRESH_BINARY);
 	}
 
@@ -186,21 +233,29 @@ Mat Tourist::segmentation()
 	imshow("foreground mask", fgmask);
 	imshow("foreground image", fgimg);
 	if(!bgimg.empty())
-	  imshow("mean background image", bgimg );
+	  imshow("mean background image", bgimg);
 }
 
 Mat Tourist::Seamless_Clone(QString src1, QString dst1, QString m)
 {
-
-
 	// Read images : src image will be cloned into dst
 	Mat src = imread(src1.toStdString());
 	Mat dst = imread(dst1.toStdString());
+
+	int row = src.rows;
+	if(row > dst.rows)
+		row = dst.rows;
+	int col = src.cols;
+	if(col > dst.cols)
+		col = dst.cols;
+
+	Mat src2 = src(Range(0,row),Range(0,col));
+
 	Mat src_mask;
 	if(m == "")
 	{
 		// Create a rough mask around the airplane.
-		src_mask = 255 * Mat::ones( src.cols,src.rows, src.depth());
+		src_mask = 255 * Mat::ones(src2.cols,src2.rows, src2.depth());
 
 		// Define the mask as a closed polygon
 		Point poly[1][7];
@@ -217,26 +272,27 @@ Mat Tourist::Seamless_Clone(QString src1, QString dst1, QString m)
 
 		// Create mask by filling the polygon
 
-		fillPoly(src_mask, polygons, num_points, 1, Scalar(255,255,255));
+		//fillPoly(src_mask, polygons, num_points, 1, Scalar(255,255,255));
 	}else
 	{
-		src_mask = imread(m.toStdString());
+		Mat Result = imread(m.toStdString());
+		if(Result.rows != src2.rows || Result.cols != src2.cols)
+		{
+			qDebug() << "create mask";
+		  src_mask.create(src2.size(),src2.type());
+		}
+
 	}
 
+	qDebug() << "set center ";
 	// The location of the center of the src in the dst
-	Point center(dst.cols/2,dst.rows/2);
-
-
-
+	Point center(src2.cols/2,src2.rows/2);
 
 	// Seamlessly clone src into dst and put the results in output
 
-	qDebug() << "size = " << src.cols << src.rows << dst.cols << dst.rows;
+	qDebug() << "size = " << src2.size <<  dst.size << src_mask.size;
 	Mat output;
-	seamlessClone(src, dst, src_mask, center, output, NORMAL_CLONE);
-
-	// Save result
-	imwrite("/rong/testfile/opencv-seamless-cloning-example.jpg", output);
+	seamlessClone(src2, dst, src_mask, center, output, NORMAL_CLONE);
 	return output;
 }
 
@@ -246,10 +302,20 @@ Mat Tourist::Seamless_Clone(QString src1, QString dst1, int n)
 	// Read images : src image will be cloned into dst
 	Mat src = imread(src1.toStdString());
 	Mat dst = imread(dst1.toStdString());
+
+	int row = src.rows;
+	if(row > dst.rows)
+		row = dst.rows;
+	int col = src.cols;
+	if(col > dst.cols)
+		col = dst.cols;
+
+	Mat src2 = src(Range(0,row),Range(0,col));
+
 	Mat src_mask;
 
 	// Create a rough mask around the airplane.
-	src_mask = 255 * Mat::ones( src.cols,src.rows, src.depth());
+	src_mask = 255 * Mat::ones(src2.cols,src2.rows, src2.depth());
 
 	// Define the mask as a closed polygon
 	Point poly[1][7];
@@ -274,12 +340,15 @@ Mat Tourist::Seamless_Clone(QString src1, QString dst1, int n)
 
 	// Seamlessly clone src into dst and put the results in output
 	Mat output;
-	seamlessClone(src, dst, src_mask, center, output, NORMAL_CLONE);
+	seamlessClone(src2, dst, src_mask, center, output, NORMAL_CLONE);
 
 	// Save result
 	imwrite("/rong/testfile/opencv-seamless-cloning-example.jpg", output);
 	return output;
 }
+
+
+
 
 /*
 void Tourist::onCandyTrackbar(int, void *p)
@@ -364,3 +433,36 @@ int Tourist::doCanny()
 	return 0;
 }
 */
+
+
+
+int const max_elem = 2;
+int const max_kernel_size = 21;
+
+void Erosion( int erosion_type, QString src_file,int erosion_size )
+{
+	Mat src = imread(src_file.toStdString(),IMREAD_COLOR);
+	Mat erosion_dst;
+  //if( erosion_elem == 0 ){ erosion_type = MORPH_RECT; }
+  //else if( erosion_elem == 1 ){ erosion_type = MORPH_CROSS; }
+  //else if( erosion_elem == 2) { erosion_type = MORPH_ELLIPSE; }
+  Mat element = getStructuringElement( erosion_type,
+					   Size( 2*erosion_size + 1, 2*erosion_size+1 ),
+					   Point( erosion_size, erosion_size ) );
+  erode( src, erosion_dst, element );
+ // imshow( "Erosion Demo", erosion_dst );
+}
+void Dilation( QString src_file,int dilation_type, int dilation_size)
+{
+	Mat src = imread(src_file.toStdString(),IMREAD_COLOR);
+	Mat dilation_dst;
+  //int dilation_type = 0;
+  //if( dilation_elem == 0 ){ dilation_type = MORPH_RECT; }
+  //else if( dilation_elem == 1 ){ dilation_type = MORPH_CROSS; }
+  //else if( dilation_elem == 2) { dilation_type = MORPH_ELLIPSE; }
+  Mat element = getStructuringElement( dilation_type,
+					   Size( 2*dilation_size + 1, 2*dilation_size+1 ),
+					   Point( dilation_size, dilation_size ) );
+  dilate( src, dilation_dst, element );
+  //imshow( "Dilation Demo", dilation_dst );
+}

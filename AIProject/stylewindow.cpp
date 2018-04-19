@@ -14,6 +14,7 @@
 #include "pictureview.h"
 #include "cvpictureview.h"
 #include "dealview.h"
+#include "tourist.h"
 
 StyleWindow::StyleWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -89,6 +90,7 @@ void StyleWindow::initButtons(QString str)
 		auto sub_obj =  tree_arr[i].toObject();
 		QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
 		item->setText(0,	sub_obj.value("text").toString());
+		item->setToolTip(0,	sub_obj.value("tooltip").toString());
 	}
 
 
@@ -106,16 +108,56 @@ void StyleWindow::slot_icon_buttun_clicked()
 	IconButton* btn = qobject_cast<IconButton*>( sender());
 	if(btn)
 		qDebug() << btn->getText() << "  Clicked ";
+	if(btn == ui->iconbtn1)
+	{
+		DealView *pView = new DealView (this);
+		auto a = ui->mdiArea->addSubWindow(pView);
+		a->setWindowTitle("Test View");
+		pView->show();
+	}
+	if(btn == ui->iconbtn2)
+	{
+		CVPictureView *pView = new CVPictureView (this);
+		auto a = ui->mdiArea->addSubWindow(pView);
+		a->setWindowTitle("Test View");
+		pView->show();
+	}
+	if(btn == ui->iconbtn3)
+	{
+		PictureView *pView = new PictureView (this);
+		auto a = ui->mdiArea->addSubWindow(pView);
+		a->setWindowTitle("Test View");
+		pView->show();
+	}
+	if(btn == ui->iconbtn4)
+	{
+		DealView *pView = new DealView (this);
+		auto a = ui->mdiArea->addSubWindow(pView);
+		a->setWindowTitle("Test View");
+		pView->show();
+	}
 }
 
 void StyleWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
 	auto txt = item->text(0);
+	auto s = ui->mdiArea->currentSubWindow();
+	s->setWindowTitle( txt);
+	auto w = s->widget();
+	DealView* d_w = dynamic_cast<DealView*>(w);
+	if(d_w)
+		d_w->setCmd( txt );
 }
 
 void StyleWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
 	auto txt = item->text(0);
+	auto s = ui->mdiArea->currentSubWindow();
+	s->setWindowTitle( txt);
+	auto w = s->widget();
+	DealView* d_w = dynamic_cast<DealView*>(w);
+	if(d_w)
+		d_w->setCmd( txt );
 }
 
 void StyleWindow::onImage_Stitching(QString file_name1, QString file_name2)

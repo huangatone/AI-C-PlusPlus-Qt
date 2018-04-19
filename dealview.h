@@ -8,16 +8,6 @@
 #include <QListWidgetItem>
 #include "pictureview.h"
 
-#include <opencv/cv.h>
-#include <opencv/cvwimage.h>
-
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui.hpp>
-
-#include <QImage>
-using namespace std;
-using namespace cv;
-
 namespace Ui {
 class DealView;
 }
@@ -47,23 +37,15 @@ private slots:
 
 	void on_btnReset_clicked();
 
-	void on_btnAddFromTree_clicked();
-
 private:
 	Ui::DealView *ui;
-
+	QLabel* lb;
 	QWidget* pa;
 	PictureView* _pictureView;
 
-	QString _cmd;
-
 	// QObject interface
-
-	void displayResult(Mat &m,QString title="");
 public:
 	bool eventFilter(QObject *watched, QEvent *event);
-	QString cmd() const;
-	void setCmd(const QString &cmd);
 };
 
 #endif // DEALVIEW_H
