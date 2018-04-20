@@ -13,7 +13,6 @@ Tourist::Tourist()
 
 Mat  Tourist::addImage(QString f1, QString f2,double a, double b)
 {
-   double alpha = 0.5; double beta; double input;
    Mat src1, src2, dst;
 
    src1 = imread(f1.toStdString());
@@ -26,7 +25,7 @@ Mat  Tourist::addImage(QString f1, QString f2,double a, double b)
 
    Mat m1 = src1(Range(0,row), Range(0,col));
    Mat m2 = src2(Range(0,row), Range(0,col));
-   beta = (1.0 - alpha);
+
    addWeighted(m1, a, m2, b, 0.0, dst);
    //imshow("Linear Blend", dst);
    //imwrite("/rong/testfile/r1.png", src1);
@@ -96,7 +95,7 @@ Mat Tourist::onCandy(QString f_n,int iThresh)
 	// 判断载入图片是否成功
 	if(image.empty())
 	{
-		printf("miss the image file: %d \n","s_orig");
+		printf("miss the image file:s_orig");
 		return Mat();
 	}
 
@@ -348,6 +347,48 @@ Mat Tourist::Seamless_Clone(QString src1, QString dst1, int n)
 }
 
 
+Mat Tourist::Advanced_Edge_Detection(QString file_name,int sz, int nThresh1, int nThresh2)
+{
+	Mat img = imread(file_name.toStdString());
+	Mat blur, imgLaplacian, imgCanny;
+	vector<Mat> rgbColourEdges(3);
+
+	// Smooth the image to reduce noise for more accurate edge detection
+	GaussianBlur(img.clone(), blur, Size(sz, sz), 0, 0, BORDER_DEFAULT);
+
+	// Now for colour edge detection
+	vector<Mat> channels(3);
+	split(blur.clone(), channels);
+	double T = 20;
+	double maxval = 255;
+	for (int i = 0; i < 3; i++)
+	{
+		// Compute the second-order derivate i.e Laplacian operator
+		Laplacian(blur.clone(), rgbColourEdges[i], CV_32F);
+		convertScaleAbs(rgbColourEdges[i], rgbColourEdges[i]);
+
+		threshold(rgbColourEdges[i], rgbColourEdges[i], T, maxval, THRESH_BINARY);
+
+	}
+
+	// Logical operation to between colour channels
+	Mat tempEdges;
+	cv::bitwise_or(rgbColourEdges[0], rgbColourEdges[1], tempEdges);
+	cv::bitwise_or(tempEdges, rgbColourEdges[2], imgLaplacian);
+
+	// Convert pixel type for display
+	imgLaplacian.convertTo(imgLaplacian, CV_8U);
+
+	// Apply the Canny Edge Detection algorithm
+	Canny(img.clone(), imgCanny, nThresh1, nThresh2);
+
+
+	imwrite(  "s_orig.png",img);
+	imwrite(  "laplacian.png",imgLaplacian);
+	imwrite(  "canny.png",imgCanny);
+
+	return imgCanny;
+}
 
 
 /*
@@ -435,9 +476,6 @@ int Tourist::doCanny()
 */
 
 
-
-int const max_elem = 2;
-int const max_kernel_size = 21;
 
 void Erosion( int erosion_type, QString src_file,int erosion_size )
 {

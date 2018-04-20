@@ -34,7 +34,8 @@ SOURCES += \
     pictureview.cpp \
     tourist.cpp \
     cvpictureview.cpp \
-    dealview.cpp
+    dealview.cpp \
+    rgbeditor.cpp
 
 HEADERS += \ 
     cvfunction.h \
@@ -46,14 +47,16 @@ HEADERS += \
     pictureview.h \
     tourist.h \
     cvpictureview.h \
-    dealview.h
+    dealview.h \
+    rgbeditor.h
 
 FORMS += \
     iconbutton.ui \
     stylewindow.ui \
     pictureview.ui \
     cvpictureview.ui \
-    dealview.ui
+    dealview.ui \
+    rgbeditor.ui
 
 INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include
@@ -67,6 +70,24 @@ DEPENDPATH += /usr/local/include
 
 INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include
+
+
+DISTFILES += \
+    opencv.json
+
+RESOURCES += \
+    ai.qrc
+
+
+
+nossl {
+  DEFINES += NO_SSL
+}
+
+win32: {
+
+}
+else: mac: {
 
 INCLUDEPATH += /rong/lib_github/brew/include
 DEPENDPATH += /rong/lib_github/brew/include
@@ -115,11 +136,61 @@ LIBS += -L/rong/lib_github/brew/lib/ -lopencv_xobjdetect
 LIBS += -L/rong/lib_github/brew/lib/ -ltbb
 
 LIBS += -L/rong/lib_github/brew/lib/ -ltesseract -llept
+}
+else: unix: {
 
-DISTFILES += \
-    opencv.json
+INCLUDEPATH += $$(opencv)/include
 
-RESOURCES += \
-    ai.qrc
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
+INCLUDEPATH += /rong/lib/include
 
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
+
+
+LIBS += -L/usr/local/lib/ -lopencv_aruco
+LIBS += -L/usr/local/lib/ -lopencv_bgsegm
+LIBS += -L/usr/local/lib/ -lopencv_bioinspired
+LIBS += -L/usr/local/lib/ -lopencv_calib3d
+LIBS += -L/usr/local/lib/ -lopencv_ccalib
+LIBS += -L/usr/local/lib/ -lopencv_core
+LIBS += -L/usr/local/lib/ -lopencv_datasets
+LIBS += -L/usr/local/lib/ -lopencv_dnn
+LIBS += -L/usr/local/lib/ -lopencv_dpm
+LIBS += -L/usr/local/lib/ -lopencv_face
+LIBS += -L/usr/local/lib/ -lopencv_features2d
+LIBS += -L/usr/local/lib/ -lopencv_flann
+LIBS += -L/usr/local/lib/ -lopencv_fuzzy
+LIBS += -L/usr/local/lib/ -lopencv_highgui
+LIBS += -L/usr/local/lib/ -lopencv_img_hash
+LIBS += -L/usr/local/lib/ -lopencv_imgcodecs
+LIBS += -L/usr/local/lib/ -lopencv_imgproc
+LIBS += -L/usr/local/lib/ -lopencv_line_descriptor
+LIBS += -L/usr/local/lib/ -lopencv_ml
+LIBS += -L/usr/local/lib/ -lopencv_objdetect
+LIBS += -L/usr/local/lib/ -lopencv_optflow
+LIBS += -L/usr/local/lib/ -lopencv_phase_unwrapping
+LIBS += -L/usr/local/lib/ -lopencv_photo
+LIBS += -L/usr/local/lib/ -lopencv_plot
+LIBS += -L/usr/local/lib/ -lopencv_reg
+LIBS += -L/usr/local/lib/ -lopencv_rgbd
+LIBS += -L/usr/local/lib/ -lopencv_saliency
+LIBS += -L/usr/local/lib/ -lopencv_shape
+LIBS += -L/usr/local/lib/ -lopencv_stereo
+LIBS += -L/usr/local/lib/ -lopencv_stitching
+LIBS += -L/usr/local/lib/ -lopencv_structured_light
+LIBS += -L/usr/local/lib/ -lopencv_superres
+LIBS += -L/usr/local/lib/ -lopencv_surface_matching
+LIBS += -L/usr/local/lib/ -lopencv_text
+LIBS += -L/usr/local/lib/ -lopencv_tracking
+LIBS += -L/usr/local/lib/ -lopencv_video
+LIBS += -L/usr/local/lib/ -lopencv_videoio
+LIBS += -L/usr/local/lib/ -lopencv_videostab
+LIBS += -L/usr/local/lib/ -lopencv_xfeatures2d
+LIBS += -L/usr/local/lib/ -lopencv_ximgproc
+LIBS += -L/usr/local/lib/ -lopencv_xobjdetect
+LIBS += -L/usr/local/lib/ -lopencv_xphoto
+LIBS += -L/usr/lib/ -ltesseract -llept
+}
 

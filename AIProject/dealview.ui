@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1159</width>
-    <height>439</height>
+    <width>785</width>
+    <height>438</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <widget class="CVPictureView" name="cvpictureWidget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
+        <horstretch>1</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
@@ -36,7 +36,7 @@
      <widget class="QGroupBox" name="groupBox_2">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>2</horstretch>
+        <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
@@ -59,92 +59,41 @@
        <property name="spacing">
         <number>2</number>
        </property>
-       <item row="5" column="1" colspan="7">
-        <widget class="QSlider" name="horizontalSlider_2">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="value">
-          <number>50</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QToolButton" name="btnRefresh">
+       <item row="4" column="6">
+        <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset resource="ai.qrc">
-           <normaloff>:/icon/file_refresh.png</normaloff>:/icon/file_refresh.png</iconset>
+          <string>D</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0" colspan="8">
-        <widget class="QListWidget" name="listWidget">
-         <property name="minimumSize">
-          <size>
-           <width>150</width>
-           <height>0</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1" colspan="7">
-        <widget class="QSlider" name="horizontalSlider">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="value">
-          <number>50</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
+       <item row="8" column="4">
         <widget class="QToolButton" name="btnReset">
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
           <iconset resource="ai.qrc">
-           <normaloff>:/icon/reset.png</normaloff>:/icon/reset.png</iconset>
+           <normaloff>:/icon/update.png</normaloff>:/icon/update.png</iconset>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QToolButton" name="btnAddFromTree">
-         <property name="text">
-          <string>...</string>
+       <item row="1" column="7">
+        <widget class="QSlider" name="sliderB">
+         <property name="minimum">
+          <number>1</number>
          </property>
-         <property name="arrowType">
-          <enum>Qt::NoArrow</enum>
+         <property name="maximum">
+          <number>100</number>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QToolButton" name="btnDel">
-         <property name="text">
-          <string>...</string>
+         <property name="value">
+          <number>50</number>
          </property>
-         <property name="icon">
-          <iconset resource="ai.qrc">
-           <normaloff>:/icon/file_del.png</normaloff>:/icon/file_del.png</iconset>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="8" column="1">
         <widget class="QToolButton" name="btnAdd">
          <property name="text">
           <string>...</string>
@@ -155,14 +104,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>B</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
+       <item row="0" column="6">
         <widget class="QLabel" name="label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -175,7 +117,34 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="6">
+       <item row="2" column="7">
+        <widget class="QSlider" name="sliderC">
+         <property name="maximum">
+          <number>10</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="6">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>C</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="7">
+        <widget class="QSlider" name="sliderD">
+         <property name="maximum">
+          <number>10</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="9">
         <widget class="QToolButton" name="btnRun">
          <property name="text">
           <string>...</string>
@@ -186,7 +155,80 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="5">
+       <item row="8" column="0">
+        <widget class="QToolButton" name="btnAddFromTree">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="arrowType">
+          <enum>Qt::NoArrow</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="6">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>B</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="7">
+        <widget class="RGBEditor" name="widget" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>28</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="3">
+        <widget class="QToolButton" name="btnRefresh">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="ai.qrc">
+           <normaloff>:/icon/trash.png</normaloff>:/icon/trash.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="7">
+        <widget class="QSlider" name="sliderA">
+         <property name="minimumSize">
+          <size>
+           <width>150</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="7">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="8" column="5" colspan="4">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -199,6 +241,36 @@
          </property>
         </spacer>
        </item>
+       <item row="8" column="2">
+        <widget class="QToolButton" name="btnDel">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="ai.qrc">
+           <normaloff>:/icon/file_del.png</normaloff>:/icon/file_del.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" rowspan="8" colspan="6">
+        <widget class="QListWidget" name="listWidget">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>2</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>240</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="7">
+        <widget class="QTextEdit" name="textEdit"/>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -210,6 +282,12 @@
    <class>CVPictureView</class>
    <extends>QWidget</extends>
    <header>cvpictureview.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>RGBEditor</class>
+   <extends>QWidget</extends>
+   <header>rgbeditor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -28,6 +28,7 @@ void PictureView::setImage(const QString &file)
 	QFile fi(file);
 	ui->label->setText( fi.fileName());
    lb->setPixmap( _img);
+   on_btnPVZoom_clicked();
 
 }
 QString PictureView::dir() const
@@ -43,14 +44,12 @@ void PictureView::setDir(const QString &dir)
 
 void PictureView::on_btnPVZoomIn_clicked()
 {
-	const QPixmap *pix = lb->pixmap();
 	lb->setScaledContents(true);
 	lb->resize( lb->width() * 0.9, lb->height()* 0.9);
 }
 
 void PictureView::on_btnPVZoomOut_clicked()
 {
-	const QPixmap *pix = lb->pixmap();
 	lb->setScaledContents(true);
 	lb->resize( lb->width() *1.1, lb->height()*1.1);
 }

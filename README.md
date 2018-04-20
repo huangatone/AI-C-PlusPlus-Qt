@@ -13,9 +13,11 @@ This application will load that JSON file and initate a command tree.
 
 Functions include:
 
---
+-- Image Stitching: fixed the crash bug from example -04/20
+-- Advanced_Edge_Detection
 
-
+Example from:
+https://github.com/GeorgeSeif/Image-Processing-OpenCV
 
 ## tesseract
 

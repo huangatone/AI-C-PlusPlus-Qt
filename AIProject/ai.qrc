@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/">
+    <file>icon/settings.png</file>
+    <file>icon/trash.png</file>
+    <file>icon/update.png</file>
     <file>icon/nozoom.png</file>
     <file>icon/zoomin.png</file>
     <file>icon/zoomout.png</file>

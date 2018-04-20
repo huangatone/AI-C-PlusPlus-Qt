@@ -21,12 +21,12 @@ StyleWindow::StyleWindow(QWidget *parent) :
 	ui(new Ui::StyleWindow)
 {
 	ui->setupUi(this);
-	qApp->setStyleSheet("QMainWindow { background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255); }"
-						"QPushButton { background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255);}"
-						"QToolBar { background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255);}"
-						"QMenuBar { background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255);}"
-						"QLabel { background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255);}"
-						"QToolButton { background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255);}");
+	qApp->setStyleSheet("QMainWindow { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255); }"
+						"QPushButton { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
+						"QToolBar { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
+						"QMenuBar { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
+						"QLabel { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
+						"QToolButton { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}");
 
 	//setStyleSheet("background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255);");
 
@@ -56,6 +56,8 @@ StyleWindow::StyleWindow(QWidget *parent) :
 	a->setWindowTitle("Test View");
 	pView->show();
 
+	ui->treeWidget->setColumnWidth(0,200);
+
 }
 
 StyleWindow::~StyleWindow()
@@ -65,19 +67,23 @@ StyleWindow::~StyleWindow()
 
 void StyleWindow::initButtons(QString str)
 {
-	//qDebug() <<"my god";
+	qDebug() <<"my god";
 	QJsonDocument doc = QJsonDocument::fromJson( str.toUtf8());
 	auto obj = doc.object();
 	auto btn_objs = obj["buttons"];
 	auto btn_arr = btn_objs.toArray();
 
 	QList<IconButton*> lt_iconbtn;
-	lt_iconbtn << ui->iconbtn1 << ui->iconbtn2 <<ui->iconbtn3<<ui->iconbtn4;
+	lt_iconbtn << ui->iconbtn1 << ui->iconbtn2 <<ui->iconbtn3<<ui->iconbtn4<< ui->iconbtn5;
 
 	for(int i=0; i< btn_arr.count(); i++)
 	{
 		auto sub_obj =  btn_arr[i].toObject();
+		qDebug() << sub_obj.value("text").toString() << sub_obj.value("icon").toString();
+
 		lt_iconbtn[i]->SetText(	sub_obj.value("text").toString());
+		lt_iconbtn[i]->SetIcon( QPixmap(sub_obj.value("icon").toString()));
+
 	}
 
 	auto tree_objs = obj["trees"];
@@ -96,11 +102,11 @@ void StyleWindow::initButtons(QString str)
 
 }
 
-void StyleWindow::initTree(QString str) {}
+void StyleWindow::initTree(QString ) {}
 
-void StyleWindow::initButtons(QString str, int i) {}
+void StyleWindow::initButtons(QString , int i) {}
 
-void StyleWindow::initTree(QString str, int i) {}
+void StyleWindow::initTree(QString , int i) {}
 
 
 void StyleWindow::slot_icon_buttun_clicked()
@@ -138,7 +144,7 @@ void StyleWindow::slot_icon_buttun_clicked()
 	}
 }
 
-void StyleWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column)
+void StyleWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int )
 {
 	auto txt = item->text(0);
 	auto s = ui->mdiArea->currentSubWindow();
@@ -149,7 +155,7 @@ void StyleWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int col
 		d_w->setCmd( txt );
 }
 
-void StyleWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
+void StyleWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int )
 {
 	auto txt = item->text(0);
 	auto s = ui->mdiArea->currentSubWindow();
@@ -408,5 +414,5 @@ void StyleWindow::on_horizontalScrollBar_sliderMoved(int position)
 
 void StyleWindow::addSubWindow(QWidget* w)
 {
-	auto a = ui->mdiArea->addSubWindow(w);
+	ui->mdiArea->addSubWindow(w);
 }

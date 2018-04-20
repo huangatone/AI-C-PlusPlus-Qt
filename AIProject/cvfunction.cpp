@@ -618,7 +618,7 @@ Mat CVFunction::find_sharp2(Mat srcImage)
 	}
 qDebug() << "sharp2 end";
 //imshow("result", drawing);
-wait(0);
+
 //todo: return threright picture;
 	return drawing;
 }
@@ -1880,7 +1880,9 @@ Mat Image_Stitching( QString file_name1, QString file_name2)
 
 	Mat stitching_result;
 	warpPerspective(img_1, stitching_result, H, Size(img_1.cols + img_2.cols, img_1.rows));
-	Mat half(stitching_result, Rect(0, 0, img_2.cols, img_2.rows));
+    int col = qMin(stitching_result.cols, img_2.cols);
+    int row = qMin(stitching_result.rows, img_2.rows);
+    Mat half(stitching_result, Rect(0, 0, col, row));
 	img_2.copyTo(half);
 
 	Mat cropped_stitching_result = crop_black_borders(stitching_result);

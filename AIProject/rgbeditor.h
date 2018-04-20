@@ -18,13 +18,13 @@
  ***********/
 #include <QWidget>
 
-#include "edcspec.h"
+
 
 namespace Ui {
 class RGBEditor;
 }
 
-class DF_DECLSPEC RGBEditor : public QWidget
+class  RGBEditor : public QWidget
 {
 	Q_OBJECT
 

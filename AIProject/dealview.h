@@ -33,10 +33,6 @@ public:
 private slots:
 	void on_listWidget_itemClicked(QListWidgetItem *item);
 
-	void on_horizontalSlider_sliderMoved(int position);
-
-	void on_horizontalSlider_2_sliderMoved(int position);
-
 	void on_btnAdd_clicked();
 
 	void on_btnDel_clicked();
@@ -48,6 +44,11 @@ private slots:
 	void on_btnReset_clicked();
 
 	void on_btnAddFromTree_clicked();
+
+	void on_sliderA_sliderMoved(int position);
+	void on_sliderB_sliderMoved(int position);
+	void on_sliderC_sliderMoved(int position);
+	void on_sliderD_sliderMoved(int position);
 
 private:
 	Ui::DealView *ui;

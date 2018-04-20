@@ -1,7 +1,10 @@
 {
-"buttons":[{ "text":"Project", "icon":"32" },{ "text":"Function", "icon":"33" },
-		   { "text":"Admin", "icon":"31" },{ "text":"Explore", "icon":"34" }],
-"trees":[{ "text":"Image_Stitching","tooltip":"1", "icon":"32" },
+"buttons":[{ "text":"Project", "icon":"icon/subgroup.png" },
+        { "text":"Function", "icon":"icon/edit.png" },
+        { "text":"Admin", "icon":"icon/debug.png" },
+        { "text":"Explore", "icon":"icon/tool.png" },
+        { "text":"Help", "icon":"icon/help.png" }],
+"trees":[{ "text":"Image_Stitching","tooltip":"tested", "icon":"32" },
             { "text":"Advanced_Edge_Detection", "tooltip":"1","icon":"33" },
             { "text":"Colour_Segmentation", "tooltip":"1","icon":"31" },
             { "text":"Colour_Transfer", "tooltip":"1","icon":"34" },
@@ -22,5 +25,6 @@
         { "text":"Seamless_Clone_Color", "tooltip":"1","icon":"31" },
         { "text":"Seamless_Clone_Mask", "tooltip":"1","icon":"31" },
         { "text":"Candy", "tooltip":"1","icon":"31" },
+        { "text":"Advanced_Edge_Detection_1", "tooltip":"1","icon":"31" },
             { "text":"other", "tooltip":"1","icon":"34" }]
 }

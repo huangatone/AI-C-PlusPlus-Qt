@@ -33,10 +33,13 @@ public:
 	Mat onBlue(QString src, int len);
 	Mat onGaussianBlur(QString src,int len);
 	Mat onMedianBlur(QString src,int len);
-	Mat onBilateralFilter(QString src,int len);
+	Mat onBilateralFilter(QString src_file,int len);
 
 	//static void onCandyTrackbar(int, void* p);
 	//int doCanny();
+
+	//Advanced Edge Detection
+	Mat Advanced_Edge_Detection(QString src,int sz, int nThresh1, int nThresh2 );
 
 
 protected:
