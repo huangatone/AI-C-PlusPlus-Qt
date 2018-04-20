@@ -44,6 +44,7 @@ StyleWindow::StyleWindow(QWidget *parent) :
 	connect( ui->iconbtn2, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
 	connect( ui->iconbtn3, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
 	connect( ui->iconbtn4, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
+	connect( ui->iconbtn5, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
 
 	QFile f("opencv.json");
 	if(f.open(QIODevice::ReadOnly))
@@ -99,7 +100,30 @@ void StyleWindow::initButtons(QString str)
 		item->setToolTip(0,	sub_obj.value("tooltip").toString());
 	}
 
+	auto colors = obj["colors"].toObject();
+	QString clr = "%1{ background-color: rgba(%2);color: rgb(%3);}";
+	QString style = "QMainWindow { %1 }"
+					"QPushButton { %2 }"
+					"QToolBar { %3}"
+					"QMenuBar { %4}"
+					"QLabel { %5}"
+					"QToolButton { %6}";
+	QString bk = colors.value("background").toString();
+	QString fk =colors.value("forecolor").toString();
+	QString style_str = clr.arg("QMainWindow").arg(bk).arg(fk);
+	style_str += clr.arg("QPushButton").arg(bk).arg(fk);
+	style_str += clr.arg("QToolBar").arg(bk).arg(fk);
+	style_str += clr.arg("QMenuBar").arg(bk).arg(fk);
+	style_str += clr.arg("QLabel").arg(bk).arg(fk);
+	style_str += clr.arg("QToolButton").arg(bk).arg(fk);
 
+	//style_str = clr.arg("QMainWindow").arg(colors.value("background").toString()).arg(colors.value("forecolor").toString());
+
+
+	//QString clr_value = clr.arg( clr.arg(colors.value("background").toString()).arg(colors.value("forecolor").toString()));
+	//style = style.arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value);
+qDebug() << style_str;
+	qApp->setStyleSheet(style_str);
 }
 
 void StyleWindow::initTree(QString ) {}
@@ -141,6 +165,14 @@ void StyleWindow::slot_icon_buttun_clicked()
 		auto a = ui->mdiArea->addSubWindow(pView);
 		a->setWindowTitle("Test View");
 		pView->show();
+	}
+	if(btn == ui->iconbtn5)
+	{
+		QFile f("opencv.json");
+		if(f.open(QIODevice::ReadOnly))
+		{
+			initButtons( f.readAll());
+		}
 	}
 }
 
