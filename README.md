@@ -15,11 +15,7 @@ Functions include:
 
 --
 
---
 
---
-
---
 
 ## tesseract
 
@@ -29,11 +25,11 @@ using Google tesseract
 
 Deal with data in JSON format and excel
 
-##Javascript
+## Javascript
 
 C3, D3
 
-##VBA
+## VBA
 
 
 
