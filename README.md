@@ -1,9 +1,9 @@
 # AI Learning Project
-## AIProject - OpenCV Project
+## AIProject - OpenCV and tesseract Project
 
 This project implemented with C++, Qt GUI project.
 
-It compiled on Mac system, deponed on OpenCV 3.4.0
+It compiled on Mac system, deponed on OpenCV 3.4.0,Google tesseract
 
 It will update later with Ubuntu version and Win10 64-bit version.
 
@@ -14,14 +14,12 @@ This application will load that JSON file and initate a command tree.
 Functions include:
 
 -- Image Stitching: fixed the crash bug from example -04/20
+
 -- Advanced_Edge_Detection
 
-Example from:
-https://github.com/GeorgeSeif/Image-Processing-OpenCV
+Example from:[Codes](https://github.com/GeorgeSeif/Image-Processing-OpenCV)
 
-## tesseract
 
-using Google tesseract
 
 ## Python
 
@@ -29,7 +27,7 @@ Deal with data in JSON format and excel
 
 ## Javascript
 
-C3, D3
+C3, D3, Create marks and group them, using a checkbox to control their visibility.
 
 ## VBA
 
