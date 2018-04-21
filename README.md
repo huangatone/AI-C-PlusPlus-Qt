@@ -13,9 +13,9 @@ This application will load that JSON file and initate a command tree.
 
 Functions include:
 
--- Image Stitching: fixed the crash bug from example -04/20
+* Image Stitching: fixed the crash bug from example -04/20
 
--- Advanced_Edge_Detection
+* Advanced_Edge_Detection
 
 Example from:[Codes](https://github.com/GeorgeSeif/Image-Processing-OpenCV)
 
@@ -27,7 +27,10 @@ Deal with data in JSON format and excel
 
 ## Javascript
 
-C3, D3, Create marks and group them, using a checkbox to control their visibility.
+*C3
+*D3
+
+Create marks and group them, using a checkbox to control their visibility.
 
 ## VBA
 
