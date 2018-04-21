@@ -31,7 +31,7 @@ Deal with data in JSON format and excel
 
 ## Javascript
 
-*[C3] (http://c3js.org/)
+*[C3](http://c3js.org/)
 
 *[D3](https://d3js.org/)
 
