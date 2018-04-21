@@ -3,7 +3,10 @@
 
 This project implemented with C++, Qt GUI project.
 
-It compiled on Mac system, deponed on OpenCV 3.4.0,Google tesseract
+It compiled on Mac system, deponed on 
+*[OpenCV 3.4.0](https://github.com/opencv/opencv)
+
+*Google [tesseract](https://github.com/tesseract-ocr/tesseract)
 
 It will update later with Ubuntu version and Win10 64-bit version.
 
@@ -27,9 +30,9 @@ Deal with data in JSON format and excel
 
 ## Javascript
 
-*C3
+*[C3] (http://c3js.org/)
 
-*D3
+*[D3](https://d3js.org/)
 
 Create marks and group them, using a checkbox to control their visibility.
 
