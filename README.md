@@ -4,6 +4,7 @@
 This project implemented with C++, Qt GUI project.
 
 It compiled on Mac system, deponed on 
+
 *[OpenCV 3.4.0](https://github.com/opencv/opencv)
 
 *Google [tesseract](https://github.com/tesseract-ocr/tesseract)
