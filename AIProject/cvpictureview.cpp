@@ -2,7 +2,7 @@
 #include "ui_cvpictureview.h"
 #include <QFileSystemModel>
 #include <QDebug>
-
+#include <QDir>
 
 
 CVPictureView::CVPictureView(QWidget *parent) :
@@ -12,11 +12,18 @@ CVPictureView::CVPictureView(QWidget *parent) :
 	ui->setupUi(this);
 
 	QFileSystemModel* pM = new QFileSystemModel (this);
+	//pM->set
 	QStringList filters;
 		 filters << "*.png" << "*.jpg" << "*.jpeg";
 	//pM->setNameFilters(filters);
-		 pM->setRootPath("/rong");
+	pM->setRootPath(QDir("Users/rong").path());
 	ui->treeView->setModel(pM);
+
+	 ui->treeView->setRootIndex(pM->index( "/rong"));
+	 //ui->treeView->setColumnHidden(1,true);
+	 ui->treeView->setColumnHidden(2,true);
+	 ui->treeView->setColumnHidden(3,true);
+	 ui->treeView->setColumnWidth(0,180);
 
 }
 
@@ -95,6 +102,7 @@ void CVPictureView::on_treeView_clicked(const QModelIndex &index)
 	{
 		auto info = pM->fileInfo(index);
 		setImage(info.absoluteFilePath());
+		
 	}
 }
 

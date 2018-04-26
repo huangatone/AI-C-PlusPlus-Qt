@@ -28,41 +28,25 @@ public:
 	explicit StyleWindow(QWidget *parent = 0);
 	~StyleWindow();
 
-	void initButtons(QString str);
-	void initTree(QString str);
-
-	void initButtons(QString str, int i);
-	void initTree(QString str, int i);
-
+	void initWidgets(QString str);
 	void addSubWindow(QWidget* w);
-
 protected slots:
 	void slot_icon_buttun_clicked();
 private slots:
 	void on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column);
-
 	void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
-
 	void on_btnDo_clicked();
+	void on_toolButton_5_clicked();
 
-	void on_btnFile1_clicked();
+	void slotSetFile();
+	void slotPreview();
 
-	void on_btnFile2_clicked();
-
-	void on_btnFile3_clicked();
-
-	void on_btnFile4_clicked();
-
-	void on_horizontalScrollBar_sliderMoved(int position);
+	void on_functionList_clicked(const QModelIndex &index);
 
 private:
 	Ui::StyleWindow *ui;
 
-
-	void setFileName(QLabel* p);
 	void displayResult(Mat &m,QString title = "NoTitle");
-
-
 
 	//Image Stitching
 	void onImage_Stitching( QString file_name1, QString file_name2);

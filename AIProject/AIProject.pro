@@ -6,6 +6,7 @@
 
 QT       += core gui
 
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ImageApp
@@ -35,7 +36,11 @@ SOURCES += \
     tourist.cpp \
     cvpictureview.cpp \
     dealview.cpp \
-    rgbeditor.cpp
+    rgbeditor.cpp \
+    fileselectwidget.cpp \
+    cvpanel.cpp \
+    dfsplitter.cpp
+
 
 HEADERS += \ 
     cvfunction.h \
@@ -48,7 +53,11 @@ HEADERS += \
     tourist.h \
     cvpictureview.h \
     dealview.h \
-    rgbeditor.h
+    rgbeditor.h \
+    fileselectwidget.h \
+    cvpanel.h \
+    dfsplitter.h
+
 
 FORMS += \
     iconbutton.ui \
@@ -56,7 +65,11 @@ FORMS += \
     pictureview.ui \
     cvpictureview.ui \
     dealview.ui \
-    rgbeditor.ui
+    rgbeditor.ui \
+    fileselectwidget.ui \
+    cvpanel.ui
+
+
 
 INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include

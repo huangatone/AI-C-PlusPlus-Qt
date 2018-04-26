@@ -16,19 +16,13 @@
 #include "dealview.h"
 #include "tourist.h"
 
+#include "cvpanel.h"
+
 StyleWindow::StyleWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::StyleWindow)
 {
 	ui->setupUi(this);
-	qApp->setStyleSheet("QMainWindow { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255); }"
-						"QPushButton { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
-						"QToolBar { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
-						"QMenuBar { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
-						"QLabel { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}"
-						"QToolButton { background-color: rgba(33, 65, 10, 255);color: rgb(255, 255, 255);}");
-
-	//setStyleSheet("background-color: rgba(33, 90, 29, 255);color: rgb(255, 255, 255);");
 
 	auto co = new QComboBox(this);
 	co->addItems( QStringList() << "Pro 1" << "Pro 2" << "Pro 3");
@@ -46,17 +40,32 @@ StyleWindow::StyleWindow(QWidget *parent) :
 	connect( ui->iconbtn4, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
 	connect( ui->iconbtn5, SIGNAL(clicked()), this, SLOT(slot_icon_buttun_clicked()));
 
+	connect( ui->fileWidget1, SIGNAL( preview()), this, SLOT(slotPreview()));
+	connect( ui->fileWidget1, SIGNAL( useCurrentPic()), this, SLOT(slotSetFile()));
+
+	connect( ui->fileWidget2, SIGNAL( preview()), this, SLOT(slotPreview()));
+	connect( ui->fileWidget2, SIGNAL( useCurrentPic()), this, SLOT(slotSetFile()));
+
+	connect( ui->fileWidget3, SIGNAL( preview()), this, SLOT(slotPreview()));
+	connect( ui->fileWidget3, SIGNAL( useCurrentPic()), this, SLOT(slotSetFile()));
+
+	connect( ui->fileWidget4, SIGNAL( preview()), this, SLOT(slotPreview()));
+	connect( ui->fileWidget4, SIGNAL( useCurrentPic()), this, SLOT(slotSetFile()));
+
+	ui->fileWidget2->setLabel_text("Mask");
+	ui->fileWidget1->setLabel_text("Src");
+
 	QFile f("opencv.json");
 	if(f.open(QIODevice::ReadOnly))
 	{
-		initButtons( f.readAll());
+		initWidgets( f.readAll());
 	}
 
-	DealView *pView = new DealView (this);
+	/*DealView *pView = new DealView (this);
 	auto a = ui->mdiArea->addSubWindow(pView);
 	a->setWindowTitle("Test View");
 	pView->show();
-
+*/
 	ui->treeWidget->setColumnWidth(0,200);
 
 }
@@ -66,7 +75,7 @@ StyleWindow::~StyleWindow()
 	delete ui;
 }
 
-void StyleWindow::initButtons(QString str)
+void StyleWindow::initWidgets(QString str)
 {
 	qDebug() <<"my god";
 	QJsonDocument doc = QJsonDocument::fromJson( str.toUtf8());
@@ -98,16 +107,15 @@ void StyleWindow::initButtons(QString str)
 		QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
 		item->setText(0,	sub_obj.value("text").toString());
 		item->setToolTip(0,	sub_obj.value("tooltip").toString());
+
+		QListWidgetItem* pListItem = new QListWidgetItem(QIcon("icon/subgroup.png"), sub_obj.value("text").toString(), ui->functionList);
+		pListItem->setToolTip(sub_obj.value("tooltip").toString());
+		pListItem->setSizeHint(QSize(64,64));
 	}
 
 	auto colors = obj["colors"].toObject();
-	QString clr = "%1{ background-color: rgba(%2);color: rgb(%3);}";
-	QString style = "QMainWindow { %1 }"
-					"QPushButton { %2 }"
-					"QToolBar { %3}"
-					"QMenuBar { %4}"
-					"QLabel { %5}"
-					"QToolButton { %6}";
+	QString clr = "%1 background-color: rgba(%2);color: rgb(%3);";
+
 	QString bk = colors.value("background").toString();
 	QString fk =colors.value("forecolor").toString();
 	QString style_str = clr.arg("QMainWindow").arg(bk).arg(fk);
@@ -117,21 +125,21 @@ void StyleWindow::initButtons(QString str)
 	style_str += clr.arg("QLabel").arg(bk).arg(fk);
 	style_str += clr.arg("QToolButton").arg(bk).arg(fk);
 
-	//style_str = clr.arg("QMainWindow").arg(colors.value("background").toString()).arg(colors.value("forecolor").toString());
+	QString single_style =  clr.arg("").arg(bk).arg(fk);
+	ui->widget->setStyleSheet(single_style);
+	ui->toolBar->setStyleSheet(single_style+tr("border-color: rgb(%1);").arg(bk));
+	ui->statusbar->setStyleSheet(single_style);
+	ui->iconbtn1->setStyleSheet(single_style);
+	ui->iconbtn2->setStyleSheet(single_style);
+	ui->iconbtn3->setStyleSheet(single_style);
+	ui->iconbtn4->setStyleSheet(single_style);
+	ui->iconbtn5->setStyleSheet(single_style);
 
+	//ui->widget_2->setStyleSheet(single_style);
 
-	//QString clr_value = clr.arg( clr.arg(colors.value("background").toString()).arg(colors.value("forecolor").toString()));
-	//style = style.arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value).arg( clr_value);
-qDebug() << style_str;
-	qApp->setStyleSheet(style_str);
+	//qDebug() << single_style;
+	//qApp->setStyleSheet(style_str);
 }
-
-void StyleWindow::initTree(QString ) {}
-
-void StyleWindow::initButtons(QString , int i) {}
-
-void StyleWindow::initTree(QString , int i) {}
-
 
 void StyleWindow::slot_icon_buttun_clicked()
 {
@@ -142,14 +150,14 @@ void StyleWindow::slot_icon_buttun_clicked()
 	{
 		DealView *pView = new DealView (this);
 		auto a = ui->mdiArea->addSubWindow(pView);
-		a->setWindowTitle("Test View");
+		a->setWindowTitle("CV View");
 		pView->show();
 	}
 	if(btn == ui->iconbtn2)
 	{
 		CVPictureView *pView = new CVPictureView (this);
 		auto a = ui->mdiArea->addSubWindow(pView);
-		a->setWindowTitle("Test View");
+		a->setWindowTitle("My Picture Browser");
 		pView->show();
 	}
 	if(btn == ui->iconbtn3)
@@ -161,9 +169,9 @@ void StyleWindow::slot_icon_buttun_clicked()
 	}
 	if(btn == ui->iconbtn4)
 	{
-		DealView *pView = new DealView (this);
+		CVPanel *pView = new CVPanel (this);
 		auto a = ui->mdiArea->addSubWindow(pView);
-		a->setWindowTitle("Test View");
+		a->setWindowTitle("Control View");
 		pView->show();
 	}
 	if(btn == ui->iconbtn5)
@@ -171,7 +179,7 @@ void StyleWindow::slot_icon_buttun_clicked()
 		QFile f("opencv.json");
 		if(f.open(QIODevice::ReadOnly))
 		{
-			initButtons( f.readAll());
+			initWidgets( f.readAll());
 		}
 	}
 }
@@ -290,10 +298,11 @@ void StyleWindow::onseam_carving(QString f_n)
 void StyleWindow::on_btnDo_clicked()
 {
 	auto cmd = ui->treeWidget->currentItem()->text(0);
-	auto t1 = ui->lbFile1->text();
-	auto t2 = ui->lbFile2->text();
-	auto t3 = ui->lbFile3->text();
-	auto t4 = ui->lbFile4->text();
+	//QString cmd = ui->functionList->currentItem()->text();
+	auto t1 = ui->fileWidget1->file_path();
+	auto t2 = ui->fileWidget2->file_path();
+	auto t3 = ui->fileWidget3->file_path();
+	auto t4 = ui->fileWidget4->file_path();
 	if( cmd.compare("Image_Stitching",Qt::CaseInsensitive) == 0 )
 	{
 		onImage_Stitching(t1,t2);
@@ -380,47 +389,6 @@ void StyleWindow::on_btnDo_clicked()
 
 }
 
-void StyleWindow::on_btnFile1_clicked()
-{
-	setFileName( ui->lbFile1);
-}
-
-void StyleWindow::on_btnFile2_clicked()
-{
-	setFileName( ui->lbFile2);
-}
-
-void StyleWindow::on_btnFile3_clicked()
-{
-	setFileName( ui->lbFile3);
-}
-
-void StyleWindow::on_btnFile4_clicked()
-{
-	auto fi = QFileDialog::getExistingDirectory(this,"Select Folder","");
-	if(fi == "")
-		return;
-	ui->lbFile4->setText(fi);
-	//setFileName( ui->lbFile4);
-
-	QString js = R"delimiter({"buttons":[{ "text":"Project", "icon":32 },{ "text":"Function", "icon":33 },
-				 { "text":"Admin", "icon":31 },{ "text":"Explore", "icon":34 }],"tree":[{ "text":"Project", "icon":32 },{ "text":"Function", "icon":33 },
-				 { "text":"Admin", "icon":31 },{ "text":"Explore", "icon":34 }]} )delimiter";
-}
-void StyleWindow::setFileName(QLabel* p)
-{
-	auto fi = QFileDialog::getOpenFileName(this,"Select Image","","Images (*.png *.jpeg *.jpg)");
-	if(fi == "")
-		return;
-	p->setText(fi);
-
-	PictureView* view = new PictureView(this);
-	view->setFile(fi);
-
-	ui->mdiArea->addSubWindow(view);
-	view->show();
-}
-
 void StyleWindow::displayResult(Mat &m,QString title)
 {
 	QScrollArea *area = new QScrollArea (this);
@@ -429,22 +397,58 @@ void StyleWindow::displayResult(Mat &m,QString title)
 
 	imwrite(title.toStdString() + ".png",m);
 	QPixmap pix("tmp.png");
-
 	lb->setPixmap( pix);
-
 	area->setWidget(lb);
-
 	auto a = ui->mdiArea->addSubWindow(area);
 	a->setWindowTitle(title);
 	area->show();
 }
 
-void StyleWindow::on_horizontalScrollBar_sliderMoved(int position)
+void StyleWindow::addSubWindow(QWidget* w)
+{
+	ui->mdiArea->addSubWindow(w);
+}
+
+void StyleWindow::on_toolButton_5_clicked()
 {
 
 }
 
-void StyleWindow::addSubWindow(QWidget* w)
+void StyleWindow::slotSetFile()
 {
-	ui->mdiArea->addSubWindow(w);
+	auto nSub = ui->mdiArea->subWindowList();
+	foreach(auto sw, nSub)
+	{
+		{
+			qDebug() << "2";
+			CVPictureView* view= dynamic_cast<CVPictureView*>(sw->widget()) ;
+			if(view)
+			{
+				qDebug() << "3";
+				FileSelectWidget* sl = (FileSelectWidget*) sender();
+				qDebug() << view->getViewFile();
+				sl->setFile_path( view->getViewFile() );
+			}
+		}
+	}
+}
+
+void StyleWindow::slotPreview()
+{
+	FileSelectWidget* sl = (FileSelectWidget*) sender();
+	PictureView* _pictureView = new PictureView(this);
+	_pictureView->installEventFilter(this);
+	//ui->mdiArea->addSubWindow(view);
+	_pictureView->setFile( sl->file_path());
+
+	 addSubWindow(_pictureView);
+	_pictureView->show();
+
+}
+
+void StyleWindow::on_functionList_clicked(const QModelIndex &index)
+{
+	//
+	QString cmd = ui->functionList->currentItem()->text();
+
 }

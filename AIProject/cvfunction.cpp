@@ -1997,8 +1997,6 @@ Mat Colour_Segmentation(QString file_name)
 	// Apply dilation on the image
 	dilate(drawing.clone(), drawing, element);  // dilate(image,dst,element);
 
-
-
 	return drawing;
 }
 
