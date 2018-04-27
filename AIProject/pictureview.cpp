@@ -93,9 +93,16 @@ void PictureView::on_horizontalSlider_sliderMoved(int position)
 	if(rat >0)
 		rat = 1.1f * rat;
 	else
-		rat = 0.9f * rat;
+		rat =-0.9f * rat;
 	lb->resize( lb->width() *rat, lb->height()*rat);
 }
 
 
-
+void PictureView::resizeEvent(QResizeEvent *event)
+{
+	if( lb->width() < ui->scrollArea->width() || lb->height() < ui->scrollArea->height())
+	{
+		lb->setScaledContents(true);
+		lb->resize( ui->scrollArea->size() );
+	}
+}

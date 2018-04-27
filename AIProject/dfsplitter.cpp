@@ -81,8 +81,14 @@ void DFSplitterHandle::paintEvent(QPaintEvent *event)
 
 	  if (orientation() == Qt::Horizontal)
 	  {
+		  bool left_icon = true;
+		  if(i==1 && splitter()->sizes()[0] == 0)
+			  left_icon = false;
+		  else if(i==2 && splitter()->sizes()[2] != 0)
+			  left_icon = false;
+
 		  fr_rt = QRect(0, h_rt.height()/2 -handle_button_width/2, h_rt.width(), handle_button_width);
-		  drawerButtonPainter(fr_rt, &painter, fr_rt.contains( pt1), splitter()->handle(0) == this);
+		  drawerButtonPainter(fr_rt, &painter, fr_rt.contains( pt1), left_icon);
 		  return;
 	  }
 	  else

@@ -18,6 +18,16 @@
 
 #include "cvpanel.h"
 
+#include <opencv/cv.h>
+#include <opencv/cvwimage.h>
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
+
+#include <QImage>
+using namespace std;
+using namespace cv;
+
 StyleWindow::StyleWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::StyleWindow)
@@ -28,6 +38,7 @@ StyleWindow::StyleWindow(QWidget *parent) :
 	co->addItems( QStringList() << "Pro 1" << "Pro 2" << "Pro 3");
 
 	ui->toolBar->addWidget( co);
+	_pictureView = nullptr;
 	QWidget* blank_w = new QWidget (this);
 	blank_w->resize(50,20);
 	blank_w->setStyleSheet("background-color: rgba(33, 90, 29, 255);");
@@ -108,9 +119,14 @@ void StyleWindow::initWidgets(QString str)
 		item->setText(0,	sub_obj.value("text").toString());
 		item->setToolTip(0,	sub_obj.value("tooltip").toString());
 
-		QListWidgetItem* pListItem = new QListWidgetItem(QIcon("icon/subgroup.png"), sub_obj.value("text").toString(), ui->functionList);
-		pListItem->setToolTip(sub_obj.value("tooltip").toString());
+		QListWidgetItem* pListItem = new QListWidgetItem(ui->functionList);
+		//pListItem->setToolTip(sub_obj.value("tooltip").toString());
 		pListItem->setSizeHint(QSize(64,64));
+
+		auto btn = new IconButton(this);
+		btn->SetIcon(QPixmap("icon/subgroup.png"));
+		btn->SetText(sub_obj.value("tooltip").toString());
+		ui->functionList->setItemWidget( pListItem, btn);
 	}
 
 	auto colors = obj["colors"].toObject();
@@ -187,221 +203,59 @@ void StyleWindow::slot_icon_buttun_clicked()
 void StyleWindow::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int )
 {
 	auto txt = item->text(0);
-	auto s = ui->mdiArea->currentSubWindow();
+	/*auto s = ui->mdiArea->currentSubWindow();
 	s->setWindowTitle( txt);
 	auto w = s->widget();
 	DealView* d_w = dynamic_cast<DealView*>(w);
 	if(d_w)
-		d_w->setCmd( txt );
+		d_w->setCmd( txt );*/
+	ui->btnDo->setText("Process " + txt);
 }
 
 void StyleWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int )
 {
 	auto txt = item->text(0);
-	auto s = ui->mdiArea->currentSubWindow();
+	/*auto s = ui->mdiArea->currentSubWindow();
 	s->setWindowTitle( txt);
 	auto w = s->widget();
 	DealView* d_w = dynamic_cast<DealView*>(w);
 	if(d_w)
-		d_w->setCmd( txt );
+		d_w->setCmd( txt );*/
+
+	ui->btnDo->setText("Process " + txt);
 }
 
-void StyleWindow::onImage_Stitching(QString file_name1, QString file_name2)
-{
-	if(file_name1 == "" || file_name2 =="")
-	{
-		QMessageBox::warning(this,"Files","Required two files");
-		return;
-	}
-	auto out = Image_Stitching(file_name1,file_name2);
-	displayResult(out);
-}
 
-void StyleWindow::onAdvanced_Edge_Detection(QString file_name, QString dir_name)
-{
-	auto out = Advanced_Edge_Detection( file_name,  dir_name);
-	displayResult(out);
-}
-
-void StyleWindow::onColour_Segmentation(QString file_name)
-{
-	auto out = Colour_Segmentation(file_name);
-	displayResult(out);
-}
-
-void StyleWindow::onColour_Transfer(QStringList file_lt)
-{
-	auto out = Colour_Transfer( file_lt);
-	foreach(auto m, out)
-		displayResult(m);
-}
-
-void StyleWindow::onContrast_Enhancement(QString file_name)
-{
-	auto out = Contrast_Enhancement( file_name);
-	displayResult(out);
-}
-
-void StyleWindow::onEdge_Detection(QString file_name)
-{
-	auto out = Edge_Detection( file_name);
-	displayResult(out);
-}
-
-void StyleWindow::onHistogram_Equalization(QString f_name)
-{
-	auto out = Histogram_Equalization( f_name);
-	displayResult(out);
-}
-
-void StyleWindow::onHarris_Corner_Detector(QString f_name)
-{
-	auto out = Harris_Corner_Detector( f_name);
-	displayResult(out);
-}
-
-void StyleWindow::onImage_Sharpening(QString f_name)
-{
-	auto out = Image_Sharpening( f_name);
-	displayResult(out);
-}
-
-void StyleWindow::onImage_Smoothing(QStringList f_lt)
-{
-	if(f_lt.count() != 2)
-	{
-		QMessageBox::warning(this,"Files","Required two files");
-		return;
-	}
-	auto out = Image_Smoothing( f_lt);
-	displayResult(out);
-}
-
-void StyleWindow::onImage_Stitching(QStringList f_lt)
-{
-	auto out = Image_Stitching( f_lt);
-	displayResult(out);
-}
-
-void StyleWindow::onPoint_Operations_on_Digital_Images(QString f_n)
-{
-	auto out = Point_Operations_on_Digital_Images( f_n);
-	displayResult(out);
-}
-
-void StyleWindow::onseam_carving(QString f_n)
-{
-	auto out = seam_carving( f_n);
-	displayResult(out);
-}
 
 void StyleWindow::on_btnDo_clicked()
 {
 	auto cmd = ui->treeWidget->currentItem()->text(0);
-	//QString cmd = ui->functionList->currentItem()->text();
-	auto t1 = ui->fileWidget1->file_path();
-	auto t2 = ui->fileWidget2->file_path();
-	auto t3 = ui->fileWidget3->file_path();
-	auto t4 = ui->fileWidget4->file_path();
-	if( cmd.compare("Image_Stitching",Qt::CaseInsensitive) == 0 )
-	{
-		onImage_Stitching(t1,t2);
-	}
-	else if( cmd.compare("Advanced_Edge_Detection",Qt::CaseInsensitive) == 0 )
-	{
-		onAdvanced_Edge_Detection(t1,t4);
-	}
-	else if( cmd.compare("Colour_Segmentation",Qt::CaseInsensitive) == 0 )
-	{
-		onColour_Segmentation(t1);
-	}
-	else if( cmd.compare("Colour_Transfer",Qt::CaseInsensitive) == 0 )
-	{
-		onColour_Transfer(QStringList() << t1<<t2);
-	}
-	else if( cmd.compare("Contrast_Enhancement",Qt::CaseInsensitive) == 0 )
-	{
-		onContrast_Enhancement(t1);
-	}
-	else if( cmd.compare("Edge_Detection",Qt::CaseInsensitive) == 0 )
-	{
-		onEdge_Detection(t1);
-	}
-	else if( cmd.compare("Histogram_Equalization",Qt::CaseInsensitive) == 0 )
-	{
-		onHistogram_Equalization(t1);
-	}
-	else if( cmd.compare("Harris_Corner_Detector",Qt::CaseInsensitive) == 0 )
-	{
-		onHarris_Corner_Detector(t1);
-	}
-	else if( cmd.compare("Image_Sharpening",Qt::CaseInsensitive) == 0 )
-	{
-		onImage_Sharpening(t1);
-	}
-	else if( cmd.compare("Image_Smoothing",Qt::CaseInsensitive) == 0 )
-	{
-		onImage_Smoothing(QStringList() << t1<<t2);
-	}
-	else if( cmd.compare("Image_Stitching",Qt::CaseInsensitive) == 0 )
-	{
-		onImage_Stitching(t1,t2);
-	}
-	else if( cmd.compare("Point_Operations_on_Digital_Images",Qt::CaseInsensitive) == 0 )
-	{
-		onPoint_Operations_on_Digital_Images(t1);
-	}
-	else if( cmd.compare("seam_carving",Qt::CaseInsensitive) == 0 )
-	{
-		onseam_carving(t1);
-	}
-	else if( cmd.compare("Text_Read",Qt::CaseInsensitive) == 0 )
-	{
-		onseam_carving(t1);
-	}
-	else if( cmd.compare("make_rect_circle",Qt::CaseInsensitive) == 0 )
-	{
-		//onGetArea(t1);
-
-		auto out = make_rect_circle( t1);
-		displayResult(out);
-	}
-	else if( cmd.compare("find_sharp",Qt::CaseInsensitive) == 0)
-	{
-		CVFunction cv;
-		Mat m = imread(t1.toStdString());
-		auto d = cv.find_sharp2(m);
-		displayResult(d, "sharp2");
-		//d = cv.find_sharp(m);
-		//displayResult(d, "sharp1");
-		//QMessageBox::warning(this, "Error", "Not such functions");
-	}
-	else if(cmd.compare("Seamless",Qt::CaseInsensitive) == 0)
-	{
-		Tourist t;
-		//t.test("rong/testfile/p1.png","rong/testfile/dst.png","rong/testfile/src.png");
-		t.Seamless_Clone(t1,t2,t3);
-	}
-	else
-	{
-
-	}
-
+	process(cmd);
+	return;
 }
 
 void StyleWindow::displayResult(Mat &m,QString title)
 {
-	QScrollArea *area = new QScrollArea (this);
-	area->setWidgetResizable(false);
-	QLabel * lb = new QLabel (this);
+	if(m.empty())
+		return;
+
 
 	imwrite(title.toStdString() + ".png",m);
-	QPixmap pix("tmp.png");
-	lb->setPixmap( pix);
-	area->setWidget(lb);
-	auto a = ui->mdiArea->addSubWindow(area);
-	a->setWindowTitle(title);
-	area->show();
+
+	if(_pictureView == nullptr)
+	{
+		_pictureView = new PictureView(this);
+		_pictureView->installEventFilter(this);
+		auto a = ui->mdiArea->addSubWindow(_pictureView);
+		a->setWindowTitle("Result Picture");
+		Qt::WindowFlags flags = 0;
+		// s ^= Qt::WindowCloseButtonHint;
+		flags = Qt::WindowMinMaxButtonsHint;
+		//a->setWindowFlags(flags);
+		a->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMinMaxButtonsHint);
+	}
+	_pictureView->setFile(title + ".png");
+	_pictureView->show();
 }
 
 void StyleWindow::addSubWindow(QWidget* w)
@@ -451,4 +305,175 @@ void StyleWindow::on_functionList_clicked(const QModelIndex &index)
 	//
 	QString cmd = ui->functionList->currentItem()->text();
 
+}
+
+void StyleWindow::process(QString cmd)
+{
+	Tourist t;
+	CVFunction cv;
+	Mat m;
+
+	QString str1 = ui->fileWidget1->file_path();
+	QString str2 = ui->fileWidget2->file_path();
+
+	QStringList file_lt;
+	file_lt << str1<<str2;
+
+	if( str1 == "")
+	{
+		QMessageBox::warning(this,"Files","At least one file Required ");
+		return;
+	}
+
+	try {
+
+		if( cmd.compare("Image_Stitching",Qt::CaseInsensitive) == 0 )
+		{
+			if(str2 == "" )
+			{
+				QMessageBox::warning(this,"Files","Required two files");
+				return;
+			}
+			m = Image_Stitching(str1,str2);
+		}
+		else if( cmd.compare("Advanced_Edge_Detection",Qt::CaseInsensitive) == 0 )
+		{
+			m = Advanced_Edge_Detection( str1,"/rong/tmp");
+		}
+		else if( cmd.compare("Colour_Segmentation",Qt::CaseInsensitive) == 0 )
+		{
+			m = Colour_Segmentation(str1);
+		}
+		else if( cmd.compare("Colour_Transfer",Qt::CaseInsensitive) == 0 )
+		{
+			if(str2 == "" )
+			{
+				QMessageBox::warning(this,"Files","Required two files");
+				return;
+			}
+
+			auto out = Colour_Transfer( file_lt);
+			foreach(auto m, out)
+				displayResult(m);
+			return;
+		}
+		else if( cmd.compare("Contrast_Enhancement",Qt::CaseInsensitive) == 0 )
+		{
+			m = Contrast_Enhancement( str1);
+		}
+		else if( cmd.compare("Edge_Detection",Qt::CaseInsensitive) == 0 )
+		{
+			m = Edge_Detection( str1);
+		}
+		else if( cmd.compare("Histogram_Equalization",Qt::CaseInsensitive) == 0 )
+		{
+			m = Histogram_Equalization( str1);
+		}
+		else if( cmd.compare("Harris_Corner_Detector",Qt::CaseInsensitive) == 0 )
+		{
+			m = Harris_Corner_Detector( str1);
+		}
+		else if( cmd.compare("Image_Sharpening",Qt::CaseInsensitive) == 0 )
+		{
+			m = Image_Sharpening( str1);
+		}
+		else if( cmd.compare("Image_Smoothing",Qt::CaseInsensitive) == 0 )
+		{
+			if(str2 == "" )
+			{
+				QMessageBox::warning(this,"Files","Required two files");
+				return;
+			}
+
+			m = Image_Smoothing( file_lt);
+		}
+		else if( cmd.compare("Image_Stitching",Qt::CaseInsensitive) == 0 )
+		{
+			if(str2 == "" )
+			{
+				QMessageBox::warning(this,"Files","Required two files");
+				return;
+			}
+
+			m = Image_Stitching( file_lt);
+		}
+		else if( cmd.compare("Point_Operations_on_Digital_Images",Qt::CaseInsensitive) == 0 )
+		{
+			m = Point_Operations_on_Digital_Images( str1);
+		}
+		else if( cmd.compare("seam_carving",Qt::CaseInsensitive) == 0 )
+		{
+			m = seam_carving( str1);
+		}
+		else if( cmd.compare("Text_Read",Qt::CaseInsensitive) == 0 )
+		{
+			m = seam_carving( str1);
+		}
+		else if( cmd.compare("make_rect_circle",Qt::CaseInsensitive) == 0 )
+		{
+			m = make_rect_circle( str1);
+		}
+		else if( cmd.compare("find_sharp",Qt::CaseInsensitive) == 0)
+		{
+
+			Mat d = imread(str1.toStdString());
+			m = cv.find_sharp2(d);
+		}
+		else if(cmd.compare("addImage",Qt::CaseInsensitive) == 0)
+		{
+			if( str2 == "")
+				{
+					QMessageBox::warning(this,"Files","Required two files");
+					return;
+				}
+			m =t.addImage(str1,str2,ui->sliderA->value() / 100.00, ui->sliderB->value()/ 100.00);
+		}
+		else if(cmd.compare("Candy",Qt::CaseInsensitive) == 0)
+		{
+			m = t.onCandy(str1,ui->sliderA->value());
+		}
+		else if(cmd.compare("Seamless_Clone_Color",Qt::CaseInsensitive) == 0)
+		{
+			if( str2 == "")
+				{
+					QMessageBox::warning(this,"Files","Required two files");
+					return;
+				}
+			m =t.Seamless_Clone(str1,str2,ui->sliderA->value());
+		}
+
+		else if(cmd.compare("Seamless_Clone_Mask",Qt::CaseInsensitive) == 0)
+		{
+			if( ui->fileWidget2->file_path() == "")
+			{
+				QMessageBox::warning(this,"Files","Required two files");
+				return;
+			}
+			m =t.Seamless_Clone(str1,str2, ui->fileWidget3->file_path());
+		}
+		else if( cmd.compare("Advanced_Edge_Detection_1",Qt::CaseInsensitive) == 0 )
+		{
+			m = t.Advanced_Edge_Detection( str1,3,ui->sliderA->value(),ui->sliderB->value());
+		}
+
+		else
+			return;
+	}
+	catch (cv::Exception& e) {
+			qDebug() << "Error opencv-- " << QString ::fromStdString(e.msg)  ;
+			return;
+		}
+
+
+	displayResult(m);
+}
+
+
+bool StyleWindow::eventFilter(QObject *watched, QEvent *event)
+{
+	if(watched == _pictureView && event->type() == QEvent::Close)
+	{
+		_pictureView = nullptr;
+	}
+	return false;
 }

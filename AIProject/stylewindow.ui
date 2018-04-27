@@ -166,7 +166,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QSplitter" name="splitter">
+     <widget class="DFSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -267,21 +267,21 @@
              </widget>
             </item>
             <item row="8" column="0">
-             <widget class="QSlider" name="horizontalSlider_3">
+             <widget class="QSlider" name="sliderC">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item row="6" column="0">
-             <widget class="QSlider" name="horizontalSlider">
+             <widget class="QSlider" name="sliderA">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item row="9" column="0">
-             <widget class="QSlider" name="horizontalSlider_4">
+             <widget class="QSlider" name="sliderD">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -360,7 +360,7 @@
              </widget>
             </item>
             <item row="7" column="0">
-             <widget class="QSlider" name="horizontalSlider_2">
+             <widget class="QSlider" name="sliderB">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -464,6 +464,12 @@
    <class>FileSelectWidget</class>
    <extends>QWidget</extends>
    <header>fileselectwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DFSplitter</class>
+   <extends>QSplitter</extends>
+   <header>dfsplitter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

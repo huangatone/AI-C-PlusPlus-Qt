@@ -48,6 +48,10 @@ private:
 
 	QString _file;
 
+
+	// QWidget interface
+protected:
+	void resizeEvent(QResizeEvent *event);
 };
 
 #endif // PICTUREVIEW_H
