@@ -92,6 +92,9 @@ RESOURCES += \
     ai.qrc
 
 
+mac {
+ RC_FILE = mac.icns
+}
 
 nossl {
   DEFINES += NO_SSL
