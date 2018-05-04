@@ -76,6 +76,8 @@ void CVPanel::initWidgets(QString str)
 		btn->SetIcon(QPixmap( "icon/" + sub_obj.value("icon").toString()));
 		btn->SetText(sub_obj.value("text").toString());
 		ui->functionList->setItemWidget( pListItem, btn);
+
+		connect(btn, SIGNAL(clicked()),this ,SLOT(slot_btn_clicked()));
 	}
 
 	auto colors = obj["colors"].toObject();
@@ -126,7 +128,7 @@ void CVPanel::on_treeWidget_itemClicked(QTreeWidgetItem *item, int )
 
 void CVPanel::on_btnDo_clicked()
 {
-	auto cmd = ui->treeWidget->currentItem()->text(0);
+	QString cmd = ui->functionList->currentItem()->text();
 	process(cmd);
 	return;
 }
@@ -199,6 +201,12 @@ void CVPanel::on_functionList_clicked(const QModelIndex &index)
 	//
 	QString cmd = ui->functionList->currentItem()->text();
 
+}
+
+void CVPanel::slot_btn_clicked()
+{
+	QString cmd = ui->functionList->currentItem()->text();
+	ui->btnDo->setText("Process " + cmd);
 }
 
 void CVPanel::process(QString cmd)
@@ -359,7 +367,7 @@ void CVPanel::process(QString cmd)
 		}
 
 
-	displayResult(m);
+	displayResult(m,cmd);
 }
 
 
