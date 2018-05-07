@@ -93,7 +93,7 @@ RESOURCES += \
 
 
 mac {
- RC_FILE = mac.icns
+ RC_FILE = open.icns
 }
 
 nossl {
