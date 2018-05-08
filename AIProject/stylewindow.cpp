@@ -75,19 +75,17 @@ StyleWindow::~StyleWindow()
 
 void StyleWindow::initWidgets(QString str)
 {
-	qDebug() <<"my god";
 	QJsonDocument doc = QJsonDocument::fromJson( str.toUtf8());
 	auto obj = doc.object();
 	auto btn_objs = obj["buttons"];
 	auto btn_arr = btn_objs.toArray();
-
 	QList<IconButton*> lt_iconbtn;
 	lt_iconbtn << ui->iconbtn1 << ui->iconbtn2 <<ui->iconbtn3<<ui->iconbtn4<< ui->iconbtn5;
 
 	for(int i=0; i< btn_arr.count(); i++)
 	{
 		auto sub_obj =  btn_arr[i].toObject();
-		qDebug() << sub_obj.value("text").toString() << sub_obj.value("icon").toString();
+		//qDebug() << sub_obj.value("text").toString() << sub_obj.value("icon").toString();
 
 		lt_iconbtn[i]->SetText(	sub_obj.value("text").toString());
 		lt_iconbtn[i]->SetIcon( QPixmap(sub_obj.value("icon").toString()));
@@ -111,7 +109,7 @@ void StyleWindow::initWidgets(QString str)
 	style_str += clr.arg("QToolButton").arg(bk).arg(fk);
 
 	QString single_style =  clr.arg("").arg(bk).arg(fk);
-	qDebug() << single_style;
+	//qDebug() << single_style;
 	ui->widget->setStyleSheet(single_style);
 	ui->toolBar->setStyleSheet(single_style+tr("border-color: rgb(%1);").arg(bk));
 	ui->statusbar->setStyleSheet(single_style);
@@ -131,10 +129,11 @@ void StyleWindow::initWidgets(QString str)
 void StyleWindow::slot_icon_buttun_clicked()
 {
 	IconButton* btn = qobject_cast<IconButton*>( sender());
-	if(btn)
-		qDebug() << btn->getText() << "  Clicked ";
+	//if(btn)
+	//	qDebug() << btn->getText() << "  Clicked ";
 	if(btn == ui->iconbtn1)
 	{
+		ui->stackedWidget->setCurrentIndex(0);
 		/*DealView *pView = new DealView (this);
 		auto a = ui->mdiArea->addSubWindow(pView);
 		a->setWindowTitle("CV View");
@@ -142,15 +141,15 @@ void StyleWindow::slot_icon_buttun_clicked()
 	}
 	if(btn == ui->iconbtn2)
 	{
-
+		ui->stackedWidget->setCurrentIndex(1);
 	}
 	if(btn == ui->iconbtn3)
 	{
-
+		ui->stackedWidget->setCurrentIndex(2);
 	}
 	if(btn == ui->iconbtn4)
 	{
-
+		ui->stackedWidget->setCurrentIndex(3);
 	}
 	if(btn == ui->iconbtn5)
 	{

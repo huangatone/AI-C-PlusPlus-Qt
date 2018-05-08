@@ -183,6 +183,16 @@ void DFSplitterHandle::mouseMoveEvent(QMouseEvent *event)
 	QSplitterHandle::mouseMoveEvent(event);
 }
 
+bool DFSplitterHandle::isLeftController() const
+{
+	return _isLeftController;
+}
+
+void DFSplitterHandle::setIsLeftController(bool isLeftController)
+{
+	_isLeftController = isLeftController;
+}
+
 void DFSplitterHandle::enterEvent(QEvent *event)
 {
 	QSplitterHandle::enterEvent(event);
@@ -232,7 +242,17 @@ QSplitterHandle *DFSplitter::createHandle()
 void DFSplitter::resizeEvent(QResizeEvent *event)
 {
 	 QSplitter::resizeEvent(event);
- }
+}
+
+bool DFSplitter::bLeftControler() const
+{
+	return _bLeftControler;
+}
+
+void DFSplitter::setBLeftControler(bool bLeftControler)
+{
+	_bLeftControler = bLeftControler;
+}
 
 void DFSplitter::slotHandleMoved(int pos,int index)
 {

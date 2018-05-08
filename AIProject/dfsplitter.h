@@ -12,6 +12,9 @@ public:
 	DFSplitterHandle(Qt::Orientation orientation, QSplitter *parent=0);
 	void setDeriction(int dr =1);
 	void setMinimumSize();
+	bool isLeftController() const;
+	void setIsLeftController(bool isLeftController);
+
 signals:
 	void doubleClicked();
 protected:
@@ -25,6 +28,7 @@ protected:
 	QPixmap up;
 	QPixmap down;
 	QList<int> _size_list;		
+	bool _isLeftController; //up-bottom
 	// QWidget interface
 protected:
 	void enterEvent(QEvent *event);
@@ -47,15 +51,20 @@ public:
 	DFSplitter(Qt::Orientation orientation= Qt::Horizontal, QWidget *parent = 0);
 	DFSplitter( QWidget *parent = 0);
 
+	bool bLeftControler() const;
+	void setBLeftControler(bool bLeftControler);
+
 protected:
-	  QSplitterHandle *createHandle();
+	QSplitterHandle *createHandle();
 
-	  // QWidget interface
+	// QWidget interface
 
-	  void resizeEvent(QResizeEvent *event);
+	void resizeEvent(QResizeEvent *event);
 
 	  QList<int> _sizes_last;
 	  QList<int> _sizs_minimum;
+
+	  bool _bLeftControler;
 
 protected slots:
 	  void doubleclicked_handle_event();

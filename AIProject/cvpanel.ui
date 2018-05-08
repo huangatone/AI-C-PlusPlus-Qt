@@ -116,34 +116,10 @@
                 </property>
                </widget>
               </item>
-              <item row="8" column="0">
-               <widget class="QSlider" name="sliderC">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="QSlider" name="sliderA">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="0">
-               <widget class="QSlider" name="sliderD">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="FileSelectWidget" name="fileWidget3" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>28</height>
-                 </size>
+              <item row="10" column="0">
+               <widget class="QPushButton" name="btnDo">
+                <property name="text">
+                 <string>Process</string>
                 </property>
                </widget>
               </item>
@@ -157,7 +133,48 @@
                 </property>
                </widget>
               </item>
-              <item row="11" column="0">
+              <item row="4" column="0">
+               <widget class="FileSelectWidget" name="fileWidget3" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>28</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="FileSelectWidget" name="fileWidget4" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>28</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
+               <widget class="QSlider" name="sliderB">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0">
+               <widget class="QSlider" name="sliderC">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0">
+               <widget class="QSlider" name="sliderD">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="12" column="0">
                <spacer name="verticalSpacer_3">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -172,11 +189,23 @@
               </item>
               <item row="1" column="0">
                <widget class="QListWidget" name="functionList">
+                <property name="mouseTracking">
+                 <bool>true</bool>
+                </property>
                 <property name="frameShape">
                  <enum>QFrame::Box</enum>
                 </property>
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
+                </property>
+                <property name="editTriggers">
+                 <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+                </property>
+                <property name="showDropIndicator" stdset="0">
+                 <bool>false</bool>
+                </property>
+                <property name="dragDropMode">
+                 <enum>QAbstractItemView::DragDrop</enum>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -187,32 +216,25 @@
                 <property name="resizeMode">
                  <enum>QListView::Adjust</enum>
                 </property>
+                <property name="spacing">
+                 <number>1</number>
+                </property>
                 <property name="viewMode">
                  <enum>QListView::IconMode</enum>
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
-               <widget class="FileSelectWidget" name="fileWidget4" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>28</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0">
-               <widget class="QPushButton" name="btnDo">
-                <property name="text">
-                 <string>Process</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="0">
-               <widget class="QSlider" name="sliderB">
+              <item row="6" column="0">
+               <widget class="QSlider" name="sliderA">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="0">
+               <widget class="QPushButton" name="pushButton">
+                <property name="text">
+                 <string>Open Browser</string>
                 </property>
                </widget>
               </item>

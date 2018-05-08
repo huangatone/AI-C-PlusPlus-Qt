@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QTreeWidgetItem>
-
+#include <QListWidgetItem>
 
 #include <opencv/cv.h>
 #include <opencv/cvwimage.h>
@@ -41,6 +41,11 @@ protected slots:
 	void slotPreview();
 
 	void on_functionList_clicked(const QModelIndex &index);
+	void slot_btn_clicked();
+
+private slots:
+	void on_pushButton_clicked();
+	void slot_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
 private:
 	void process(QString cmd);
@@ -49,6 +54,7 @@ private:
 	bool eventFilter(QObject *watched, QEvent *event);
 	PictureView* _pictureView;
 
+	QString _cmd;
 	Ui::CVPanel *ui;
 };
 

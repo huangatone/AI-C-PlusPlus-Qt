@@ -34,6 +34,9 @@ CVPanel::CVPanel(QWidget *parent) :
 	connect( ui->fileWidget4, SIGNAL( preview()), this, SLOT(slotPreview()));
 	connect( ui->fileWidget4, SIGNAL( useCurrentPic()), this, SLOT(slotSetFile()));
 
+	connect( ui->functionList, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+			 this, SLOT(slot_currentItemChanged(QListWidgetItem *, QListWidgetItem *)));
+
 	ui->fileWidget2->setLabel_text("Mask");
 	ui->fileWidget1->setLabel_text("Src");
 	ui->treeWidget->setColumnWidth(0,200);
@@ -47,14 +50,11 @@ CVPanel::~CVPanel()
 
 
 void CVPanel::initWidgets(QString str)
-{
-	qDebug() <<"my god";
+{	
 	QJsonDocument doc = QJsonDocument::fromJson( str.toUtf8());
 	auto obj = doc.object();
 	auto btn_objs = obj["buttons"];
 	auto btn_arr = btn_objs.toArray();
-
-
 
 	auto tree_objs = obj["trees"];
 
@@ -76,27 +76,11 @@ void CVPanel::initWidgets(QString str)
 		btn->SetIcon(QPixmap( "icon/" + sub_obj.value("icon").toString()));
 		btn->SetText(sub_obj.value("text").toString());
 		ui->functionList->setItemWidget( pListItem, btn);
+		pListItem->setBackground(Qt::darkGray);
 
 		connect(btn, SIGNAL(clicked()),this ,SLOT(slot_btn_clicked()));
 	}
 
-	auto colors = obj["colors"].toObject();
-	QString clr = "%1 background-color: rgba(%2);color: rgb(%3);";
-
-	QString bk = colors.value("background").toString();
-	QString fk =colors.value("forecolor").toString();
-	QString style_str = clr.arg("QMainWindow").arg(bk).arg(fk);
-	style_str += clr.arg("QPushButton").arg(bk).arg(fk);
-	style_str += clr.arg("QToolBar").arg(bk).arg(fk);
-	style_str += clr.arg("QMenuBar").arg(bk).arg(fk);
-	style_str += clr.arg("QLabel").arg(bk).arg(fk);
-	style_str += clr.arg("QToolButton").arg(bk).arg(fk);
-
-
-	//ui->widget_2->setStyleSheet(single_style);
-
-	//qDebug() << single_style;
-	//qApp->setStyleSheet(style_str);
 }
 
 void CVPanel::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int )
@@ -128,8 +112,7 @@ void CVPanel::on_treeWidget_itemClicked(QTreeWidgetItem *item, int )
 
 void CVPanel::on_btnDo_clicked()
 {
-	QString cmd = ui->functionList->currentItem()->text();
-	process(cmd);
+	process(_cmd);
 	return;
 }
 
@@ -197,15 +180,19 @@ void CVPanel::slotPreview()
 }
 
 void CVPanel::on_functionList_clicked(const QModelIndex &index)
-{
-	//
-	QString cmd = ui->functionList->currentItem()->text();
-
+{	
 }
-
+void CVPanel::slot_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+	current->setBackground(Qt::gray);
+	if(previous)previous->setBackground(Qt::darkGray);
+}
 void CVPanel::slot_btn_clicked()
 {
-	QString cmd = ui->functionList->currentItem()->text();
+	//qDebug() << "do click";
+	IconButton* btn = (IconButton*)sender();
+	QString cmd = btn->getText();
+	_cmd = cmd;
 	ui->btnDo->setText("Process " + cmd);
 }
 
@@ -378,4 +365,12 @@ bool CVPanel::eventFilter(QObject *watched, QEvent *event)
 		_pictureView = nullptr;
 	}
 	return false;
+}
+
+void CVPanel::on_pushButton_clicked()
+{
+	CVPictureView *pView = new CVPictureView (this);
+	auto a = ui->mdiArea->addSubWindow(pView);
+	a->setWindowTitle("Picture Browser");
+	pView->show();
 }
