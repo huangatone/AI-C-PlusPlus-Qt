@@ -153,10 +153,18 @@ void StyleWindow::slot_icon_buttun_clicked()
 	}
 	if(btn == ui->iconbtn5)
 	{
-		QFile f("opencv.json");
-		if(f.open(QIODevice::ReadOnly))
-		{
-			initWidgets( f.readAll());
-		}
+		ui->stackedWidget->setCurrentIndex(4);
+	}
+}
+
+void StyleWindow::on_toolButton_8_clicked()
+{
+	auto f_name = QFileDialog::getOpenFileName();
+	if (f_name == "")
+		return;
+	QFile f(f_name);
+	if(f.open(QIODevice::ReadOnly))
+	{
+		initWidgets( f.readAll());
 	}
 }

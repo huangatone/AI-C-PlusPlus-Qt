@@ -85,8 +85,7 @@ INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include
 
 
-DISTFILES += \
-    opencv.json
+DISTFILES +=
 
 RESOURCES += \
     ai.qrc

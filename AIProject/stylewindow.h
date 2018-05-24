@@ -26,6 +26,8 @@ protected slots:
 private slots:
 
 
+	void on_toolButton_8_clicked();
+
 private:
 	Ui::StyleWindow *ui;
 

@@ -115,7 +115,7 @@
           <item row="4" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
-             <string>back</string>
+             <string>Style</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
