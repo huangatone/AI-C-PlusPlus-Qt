@@ -7,12 +7,49 @@
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <thread>
+
+using namespace std;
+
 
 void error(const char *msg)
 {
     perror(msg);
     exit(1);
 }
+
+
+void recv_msg(int sock)
+{
+    char buffer[256];
+    int n = read(sock,buffer,255);
+    while (n >=0)
+    {
+        printf("%s\n",buffer);
+        n = read(sock,buffer,255);
+    }
+    if (n < 0) 
+         error("ERROR reading from socket");
+}
+
+void write_msg(int sockfd)
+{
+    char buffer[256];
+    while(true)
+    {
+        printf("Please enter the message: ");
+        bzero(buffer,256);
+        fgets(buffer,255,stdin);
+        int n = write(sockfd,buffer,strlen(buffer));
+        if (n < 0) 
+        {
+             error("ERROR writing to socket");
+             break;
+        }
+    }
+    
+}
+
 
 int main(int argc, char *argv[])
 {

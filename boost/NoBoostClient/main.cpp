@@ -6,10 +6,15 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h> 
-
+#include <list>
+#include <vector>  
 #include <thread>
+#include <iostream>
 
 using namespace std;
+
+vector<thread> lt_thread;
+list<int>   lt_sock;
 
 
 
@@ -37,15 +42,18 @@ void write_msg(int sockfd)
     char buffer[256];
     while(true)
     {
-        printf("Please enter the message: ");
-        bzero(buffer,256);
-        fgets(buffer,255,stdin);
+        //get msg from ui
+        //printf("Please enter the message: ");
+        //bzero(buffer,256);
+        //fgets(buffer,255,stdin);
+        sprintf (buffer, "MSG from %d",  sockfd);
         int n = write(sockfd,buffer,strlen(buffer));
         if (n < 0) 
         {
              error("ERROR writing to socket");
              break;
         }
+        std::this_thread::sleep_for(1s);
     }
     
 }
@@ -76,11 +84,10 @@ void new_connect(char* serv, int port)
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
         error("ERROR connecting");
     
-    thread write_thd(write_msg, sockfd);
-    thread read_thd(recv_msg, sockfd);
-
-    read_thd.join();
-    write_thd.join();
+    
+    lt_sock.push_back(sockfd);
+    std::cout<<"end" << lt_sock.size() <<endl;
+ 
 }
 
 
@@ -90,11 +97,27 @@ int main(int argc, char *argv[])
          fprintf(stderr,"ERROR, no host name and port provided\n");
          exit(1);
      }
-    int n = 1000;
+    int n = 250;
     while(n >0)
     {
         new_connect(argv[1], atoi(argv[2]));
         n--;
     }
+
+    for (auto sk : lt_sock) 
+    {
+        thread write_thd(write_msg, sk);    
+        lt_thread.push_back(std::move(write_thd));
+        lt_thread.push_back(thread (recv_msg, sk) );
+    }
+    n = lt_thread.size();
+    for (auto  it=lt_thread.begin(); it != lt_thread.end(); ++it)
+    {
+        it->join();
+    }
+        
+    //for (auto& th : threads) th.join();
+
+   
     return 0;
 }
