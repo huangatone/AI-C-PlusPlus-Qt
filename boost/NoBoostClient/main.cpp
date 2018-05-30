@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
          fprintf(stderr,"ERROR, no host name and port provided\n");
          exit(1);
      }
-    int n = 250;
+    int n = 500;
     while(n >0)
     {
         new_connect(argv[1], atoi(argv[2]));

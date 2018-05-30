@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/settings.png</file>
+        <file>icon/trash.png</file>
+        <file>icon/update.png</file>
+        <file>icon/nozoom.png</file>
+        <file>icon/zoomin.png</file>
+        <file>icon/zoomout.png</file>
+        <file>icon/preview.png</file>
+        <file>icon/file_add.png</file>
+        <file>icon/file_del.png</file>
+        <file>icon/task_run.png</file>
+        <file>icon/file_refresh.png</file>
+        <file>icon/run_opencv.png</file>
+        <file>icon/reset.png</file>
+        <file>opencv.json</file>
+        <file>icon/app.png</file>
+        <file>icon/bugs.png</file>
+        <file>icon/debug.png</file>
+        <file>icon/edit.jpeg</file>
+        <file>icon/help.png</file>
+        <file>icon/edit.png</file>
+        <file>icon/setting.png</file>
+    </qresource>
+</RCC>
