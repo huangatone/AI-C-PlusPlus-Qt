@@ -172,7 +172,7 @@ AutoTestWidget::AutoTestWidget(QWidget *parent) :
 	ui->setupUi(this);
 	ui->comboBox->addItems(QStringList() << "C1" << "D2" << "E3" << "F4");
 	QDesktopWidget* app = QApplication::desktop();
-
+/*
 	qDebug() << app->screenCount() << app->numScreens() << app->screenGeometry(0) << app->screenGeometry(1) << app->primaryScreen();
 	app->screen(0)->  grab( QRect(0,0, 1440,900) ).save("/rong/screen_sub.png","PNG");
 	grab().save("/rong/screen1.png","PNG");
@@ -224,7 +224,7 @@ AutoTestWidget::AutoTestWidget(QWidget *parent) :
   //qDebug() << tmp;
 
 
-
+*/
 }
 
 AutoTestWidget::~AutoTestWidget()

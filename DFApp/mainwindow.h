@@ -12,7 +12,11 @@ public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
+protected slots:
+	void slot_view_item();
 
+private:
+	QStringList _view_menu_items;
 };
 
 #endif // MAINWINDOW_H
