@@ -6,6 +6,8 @@
 #include <QProcess>
 #include <QJsonObject>
 
+#include "testthread.h"
+
 namespace Ui {
 class TestWidget;
 }
@@ -42,7 +44,7 @@ protected:
 	bool doResult(QString pix_file);
 	void doTakeScreenshot(QString img_file);
 	bool doTest(QJsonObject obj);
-
+	static void doTestThread(QJsonObject obj,TestWidget* w);
 private:
 	Ui::TestWidget *ui;
 	QProcess s;
@@ -52,8 +54,7 @@ private:
 	QString _img_folder;
 	QString _result_file;
 
-	bool _bPause;
-	bool _bStop;
+	TestThread* _test_thread;
 };
 
 #endif // TESTWIDGET_H

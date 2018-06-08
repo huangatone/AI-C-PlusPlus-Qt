@@ -10,8 +10,19 @@
 #include <QDesktopWidget>
 #include <QScreen>
 
-#include "mycv.h"
+
 #include "osevent.h"
+#include "mycv.h"
+
+#include <thread>
+
+void test_thread()
+{
+	for(int n=0; n< 10; n++)
+	{
+		qDebug() << "-------------";
+	}
+}
 
 TestWidget::TestWidget(QWidget *parent) :
 	QWidget(parent),
@@ -21,6 +32,10 @@ TestWidget::TestWidget(QWidget *parent) :
 	_screen_shot_file = "/rong/screen_shot.png";
 	_result_file = "/rong/result_test.png";
 	_img_folder = "/rong/";
+	//auto a = std::thread(test_thread);
+	//a.join();
+	_test_thread =  new TestThread(this);
+
 }
 
 TestWidget::~TestWidget()
@@ -50,11 +65,20 @@ bool TestWidget::doTestCase(QString casefile)
 	auto obj = doc.object();
 	auto case_name = obj["TestCase"];
 	ui->listWidget_2->addItem( case_name.toString( ) + " - " + "Start...");
-	bool bSucc =  doTest(obj);
+_test_thread->clear();
+	_test_thread->add_case(obj);
+	_test_thread->start();
+
+	return true;
+
+	bool bSucc   =  doTest(obj);
 	if(bSucc)
 		ui->listWidget_2->addItem( case_name.toString( ) + " - " + "Passed");
 	else
 		ui->listWidget_2->addItem( case_name.toString( ) + " - " + "Failed");
+
+	//auto a  = std::thread(doTestThread,obj, this);
+	//a.join();
 	return bSucc;
 }
 
@@ -94,27 +118,16 @@ void TestWidget::doText(QString pix_file,QString text)
 	doTakeScreenshot(_screen_shot_file);
 	auto pos= MatchingMethod( _screen_shot_file,pix_file,4);
 	qDebug() << "pos " << pos ;
-	CGPoint point;
+
 	QPixmap pix(pix_file);
-	point.x = pos.x() + pix.width() ;
-	point.y = pos.y()+ pix.height()/2;
+	click(pos.x() + pix.width() ,pos.y()+ pix.height()/2);
 
-	qDebug() <<"click at" <<  point.x << point.y;
-	CGEventRef theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseDown, point, kCGMouseButtonLeft);
-	CGEventPost(kCGHIDEventTap, theEvent);
-	CFRelease(theEvent);
 
-	theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseUp, point, kCGMouseButtonLeft);
-	CGEventPost(kCGHIDEventTap, theEvent);
-	CFRelease(theEvent);
 	sleep(1);
 	auto str = text;
 	foreach(char ch , str.toUtf8())
 	{
-		CGKeyCode k = QtKeyCode2MacKeyCode(ch);
-		CGEventRef mkey = CGEventCreateKeyboardEvent(NULL, k, true);
-		CGEventPost(kCGHIDEventTap, mkey);
-		CFRelease(mkey);
+		key(ch);
 	}
 }
 
@@ -125,21 +138,11 @@ void TestWidget::doClick(QString pix_file)
 
 	auto pos= MatchingMethod( _screen_shot_file,img_file,4);
 	qDebug() << "pos " << pos ;
-	CGPoint point;
+
 	QPixmap pix(img_file);
+	click(pos.x()+pix.width()/2 ,pos.y()+pix.height()/2);
 
-	point.x = pos.x()+pix.width()/2;
-	point.y = pos.y()+pix.height()/2;
-
-	qDebug() <<"click at" <<  point.x << point.y;
-	CGEventRef theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseDown, point, kCGMouseButtonLeft);
-	CGEventPost(kCGHIDEventTap, theEvent);
-	CFRelease(theEvent);
-
-	theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseUp, point, kCGMouseButtonLeft);
-	CGEventPost(kCGHIDEventTap, theEvent);
-	CFRelease(theEvent);	
-	sleep(2);
+	sleep(1);
 }
 
 void TestWidget::doTakeScreenshot(QString img_file)
@@ -151,8 +154,7 @@ void TestWidget::doTakeScreenshot(QString img_file)
 
 bool TestWidget::doTest(QJsonObject obj)
 {
-	_bPause = false;
-	_bStop = false;
+
 
 	//s.setProcessChannelMode(QProcess::MergedChannels);
 	auto case_name = obj["TestCase"];
@@ -181,12 +183,7 @@ bool TestWidget::doTest(QJsonObject obj)
 	{
 		sleep(1);
 
-		while(_bPause)
-		{
-			sleep(1);
-		}
-		if(_bStop )
-			break;
+
 
 		auto so = s.toObject();
 		qDebug() <<"Step " << step_index <<  so["type"].toString() << so["text"].toString();
@@ -217,6 +214,17 @@ bool TestWidget::doTest(QJsonObject obj)
 
 	qDebug() << "End Case -----"<< case_name.toString();
 	return false;
+}
+
+void TestWidget::doTestThread(QJsonObject obj, TestWidget *w)
+{
+	w->doTest(obj);
+
+	bool bSucc =  w->doTest(obj);
+	if(bSucc)
+		w->ui->listWidget_2->addItem( obj["TestCase"].toString( ) + " - " + "Passed");
+	else
+		w->ui->listWidget_2->addItem( obj["TestCase"].toString( ) + " - " + "Failed");
 }
 
 
@@ -330,9 +338,11 @@ void TestWidget::on_pushButton_2_clicked()
 void TestWidget::on_pushButton_3_clicked()
 {
 	//_bPause = !_bPause;
+	_test_thread->setBPause( !_test_thread->bPause());
 }
 
 void TestWidget::on_pushButton_4_clicked()
 {
 	//_bStop = true;
+	_test_thread->setBStop( !_test_thread->bStop());
 }

@@ -35,7 +35,8 @@ SOURCES += \
     testdialog.cpp \
     testwidget.cpp \
     mycv.cpp \
-    osevent.cpp
+    osevent.cpp \
+    testthread.cpp
 
 
 HEADERS += \
@@ -46,7 +47,8 @@ HEADERS += \
     testdialog.h \
     testwidget.h \
     mycv.h \
-    osevent.h
+    osevent.h \
+    testthread.h
 
 
 FORMS += \
