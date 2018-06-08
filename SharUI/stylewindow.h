@@ -21,14 +21,14 @@ public:
 
 	void initWidgets(QString str);
 	void addSubWindow(QWidget* w);
+
+	void setCurrentWidget(int index);
+	void setCurrentWidget(QWidget* w);
 protected slots:
 	void slot_icon_buttun_clicked();
-private slots:
-
-
 	void on_toolButton_8_clicked();
 
-private:
+protected:
 	Ui::StyleWindow *ui;
 
 

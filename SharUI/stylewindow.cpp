@@ -65,7 +65,7 @@ StyleWindow::~StyleWindow()
 
 void StyleWindow::initWidgets(QString str)
 {
-	qDebug() << "init";
+	//qDebug() << "init";
 	QJsonDocument doc = QJsonDocument::fromJson( str.toUtf8());
 	auto obj = doc.object();
 	auto btn_objs = obj["buttons"];
@@ -76,7 +76,7 @@ void StyleWindow::initWidgets(QString str)
 	for(int i=0; i< btn_arr.count(); i++)
 	{
 		auto sub_obj =  btn_arr[i].toObject();
-		qDebug() << sub_obj.value("text").toString() << sub_obj.value("icon").toString();
+		//qDebug() << sub_obj.value("text").toString() << sub_obj.value("icon").toString();
 
 		lt_iconbtn[i]->SetText(	sub_obj.value("text").toString());
 		lt_iconbtn[i]->SetIcon( QPixmap(sub_obj.value("icon").toString()));
@@ -120,6 +120,16 @@ void StyleWindow::initWidgets(QString str)
 void StyleWindow::addSubWindow(QWidget *w)
 {
 	ui->stackedWidget->addWidget(w);
+}
+
+void StyleWindow::setCurrentWidget(int index)
+{
+	ui->stackedWidget->setCurrentIndex(index);
+}
+
+void StyleWindow::setCurrentWidget(QWidget *w)
+{
+	ui->stackedWidget->setCurrentWidget(w);
 }
 
 void StyleWindow::slot_icon_buttun_clicked()
