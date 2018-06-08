@@ -9,8 +9,7 @@
 
 #include <QDesktopWidget>
 #include <QScreen>
-#include <Carbon/Carbon.h>
-#include <ApplicationServices/ApplicationServices.h>
+
 #include "mycv.h"
 #include "osevent.h"
 
@@ -32,7 +31,10 @@ TestWidget::~TestWidget()
 
 void TestWidget::on_btnExcute_clicked()
 {
-	doTestCase("/rong/case.json");
+	auto a = QFileDialog::getOpenFileName();
+	if(a.isEmpty())
+		return;
+	doTestCase(a);
 }
 
 bool TestWidget::doTestCase(QString casefile)
@@ -43,116 +45,21 @@ bool TestWidget::doTestCase(QString casefile)
 		qDebug() << "file error";
 		return false;
 	}
-
-
 	QString str = fi.readAll();
 	QJsonDocument doc = QJsonDocument::fromJson( str.toUtf8());
 	auto obj = doc.object();
 	auto case_name = obj["TestCase"];
+	ui->listWidget_2->addItem( case_name.toString( ) + " - " + "Start...");
 	bool bSucc =  doTest(obj);
 	if(bSucc)
 		ui->listWidget_2->addItem( case_name.toString( ) + " - " + "Passed");
 	else
 		ui->listWidget_2->addItem( case_name.toString( ) + " - " + "Failed");
 	return bSucc;
-
-
-	//s.setProcessChannelMode(QProcess::MergedChannels);
-
-	qDebug() << "Start Case -----" << case_name.toString();
-	auto pre = obj["PreCodition"].toObject();
-	auto app = pre["APP"].toString();
-	auto isClearDesk = pre["ClearDesk"].toString();
-
-	s.waitForFinished(-1);
-	s.start("open /Applications/DFdiscover 5.0.0/"  + app );
-	//s.start("open /rong/"  + app );
-
-	s.waitForFinished(-1);
-	qDebug() << "finished";
-
-	QString s_file = _screen_shot_file;
-	QDesktopWidget* app_desk = QApplication::desktop();
-	QScreen *screen = QGuiApplication::primaryScreen();
-	screen->grabWindow(app_desk->screen(0)->winId(),0,0,app_desk->screen(0)->geometry().width()/2,app_desk->screen(0)->geometry().height()/2).save(s_file,"PNG");
-
-	auto steps = obj["steps"].toArray();
-	auto img_folder = obj["ImageFolder"].toString();
-	int case_index = 1;
-	foreach(auto s, steps)
-	{
-		sleep(2);
-		auto so = s.toObject();
-		if(so["type"].toString() == "ScreenShot")
-		{
-			qDebug() << "screen shot";
-			screen->grabWindow(app_desk->screen(0)->winId(),0,0,app_desk->screen(0)->geometry().width()/2,app_desk->screen(0)->geometry().height()/2).save(s_file,"PNG");
-			continue;
-		}
-		else if(so["type"].toString() == "sleep")
-		{
-			continue;
-		}
-
-
-		auto img_file = img_folder + "step" + QString::number(case_index) + ".png";
-		qDebug() << img_file;
-		if(so["type"].toString().compare("result",Qt::CaseInsensitive) == 0 )
-		{
-			//doCompareResult();
-			continue;
-		}
-
-		//ui->listWidget_3->addItem( "Step i: " + so["type"].toString() + " " + so["ID"].toString());
-		auto pos= MatchingMethod( s_file,img_file,4);
-		qDebug() << "pos " << pos << so["text"].toString();
-		CGPoint point;
-		QPixmap pix(img_file);
-
-		if(so["type"] == "Input")
-		{
-			point.x = pos.x() + pix.width() ;
-			point.y = pos.y()+ pix.height()/2;
-		}
-		else if(so["type"] == "click")
-		{
-			point.x = pos.x()+pix.width()/2;
-			point.y = pos.y()+pix.height()/2;
-		}
-
-		qDebug() <<"click at" <<  point.x << point.y;
-		CGEventRef theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseDown, point, kCGMouseButtonLeft);
-		CGEventPost(kCGHIDEventTap, theEvent);
-		CFRelease(theEvent);
-
-		theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseUp, point, kCGMouseButtonLeft);
-		CGEventPost(kCGHIDEventTap, theEvent);
-		CFRelease(theEvent);
-		//sleep(4);
-		sleep(2);
-
-		if(so["type"] == "Input")
-		{
-			auto str = so["text"].toString();
-			foreach(char ch , str.toUtf8())
-			{
-				CGKeyCode k = QtKeyCode2MacKeyCode(ch);
-				CGEventRef mkey = CGEventCreateKeyboardEvent(NULL, k, true);
-				CGEventPost(kCGHIDEventTap, mkey);
-				CFRelease(mkey);
-				//sleep(4);
-			}
-		}
-		case_index++;
-	}
-
-	qDebug() << "End Case -----"<< case_name.toString();
-
 }
 
 bool TestWidget::doResult(QString pix_file)
 {
-
 	//take a screen shot
 	doTakeScreenshot(_screen_shot_file);
 	//find position
@@ -184,7 +91,6 @@ bool TestWidget::doResult(QString pix_file)
 void TestWidget::doText(QString pix_file,QString text)
 {
 	//take a screen shot;
-
 	doTakeScreenshot(_screen_shot_file);
 	auto pos= MatchingMethod( _screen_shot_file,pix_file,4);
 	qDebug() << "pos " << pos ;
@@ -217,7 +123,6 @@ void TestWidget::doClick(QString pix_file)
 	auto img_file =  pix_file;
 	qDebug() << img_file;
 
-	//ui->listWidget_3->addItem( "Step i: " + so["type"].toString() + " " + so["ID"].toString());
 	auto pos= MatchingMethod( _screen_shot_file,img_file,4);
 	qDebug() << "pos " << pos ;
 	CGPoint point;
@@ -233,10 +138,8 @@ void TestWidget::doClick(QString pix_file)
 
 	theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseUp, point, kCGMouseButtonLeft);
 	CGEventPost(kCGHIDEventTap, theEvent);
-	CFRelease(theEvent);
-	//sleep(4);
+	CFRelease(theEvent);	
 	sleep(2);
-
 }
 
 void TestWidget::doTakeScreenshot(QString img_file)
@@ -244,7 +147,6 @@ void TestWidget::doTakeScreenshot(QString img_file)
 	QDesktopWidget* app_desk = QApplication::desktop();
 	QScreen *screen = QGuiApplication::primaryScreen();
 	screen->grabWindow(app_desk->screen(0)->winId(),0,0,app_desk->screen(0)->geometry().width()/2,app_desk->screen(0)->geometry().height()/2).save(img_file,"PNG");
-	qDebug() << app_desk->screen(0)->geometry();
 }
 
 bool TestWidget::doTest(QJsonObject obj)
@@ -255,6 +157,7 @@ bool TestWidget::doTest(QJsonObject obj)
 	//s.setProcessChannelMode(QProcess::MergedChannels);
 	auto case_name = obj["TestCase"];
 	qDebug() << "Start Case -----" << case_name.toString();
+
 	auto pre = obj["PreCodition"].toObject();
 	auto app = pre["APP"].toString();
 	auto isClearDesk = pre["ClearDesk"].toString();
@@ -317,9 +220,14 @@ bool TestWidget::doTest(QJsonObject obj)
 }
 
 
+
 void TestWidget::on_tbnLoad_clicked()
 {
-	QFile fi("/rong/case.json");
+	auto a = QFileDialog::getOpenFileName();
+	if(a.isEmpty())
+		return;
+
+	QFile fi(a);
 	if(fi.open(QIODevice::ReadWrite) == false)
 	{
 		qDebug() << "file error";
@@ -421,10 +329,10 @@ void TestWidget::on_pushButton_2_clicked()
 
 void TestWidget::on_pushButton_3_clicked()
 {
-	_bPause = !_bPause;
+	//_bPause = !_bPause;
 }
 
 void TestWidget::on_pushButton_4_clicked()
 {
-	_bStop = true;
+	//_bStop = true;
 }

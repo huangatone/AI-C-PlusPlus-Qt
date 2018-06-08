@@ -1,12 +1,36 @@
 #include "osevent.h"
 #include <QKeyEvent>
+#include <QDebug>
+
 osevent::osevent()
 {
 
 }
 
 
+void click(int x, int y)
+{
+	CGPoint point;
+	point.x = x;
+	point.y = y;
+	qDebug() <<"click at" <<  point.x << point.y;
+	CGEventRef theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseDown, point, kCGMouseButtonLeft);
+	CGEventPost(kCGHIDEventTap, theEvent);
+	CFRelease(theEvent);
+	theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseUp, point, kCGMouseButtonLeft);
+	CGEventPost(kCGHIDEventTap, theEvent);
+	CFRelease(theEvent);
+}
 
+
+void key(char ch)
+{
+	CGKeyCode k = QtKeyCode2MacKeyCode(ch);
+	CGEventRef mkey = CGEventCreateKeyboardEvent(NULL, k, true);
+	//CGEventSetFlags(mkey, kCGEventFlagMaskShift);//set shift key down for above event
+	CGEventPost(kCGHIDEventTap, mkey);
+	CFRelease(mkey);
+}
 
 CGKeyCode QtKeyCode2MacKeyCode(char k)
 {

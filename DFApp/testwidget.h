@@ -42,6 +42,7 @@ protected:
 	bool doResult(QString pix_file);
 	void doTakeScreenshot(QString img_file);
 	bool doTest(QJsonObject obj);
+
 private:
 	Ui::TestWidget *ui;
 	QProcess s;

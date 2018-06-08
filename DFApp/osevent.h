@@ -10,6 +10,7 @@ public:
 };
 
 CGKeyCode QtKeyCode2MacKeyCode(char k);
-
+void click(int x, int y);
+void key(char ch);
 
 #endif // OSEVENT_H
