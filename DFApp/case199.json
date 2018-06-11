@@ -1,0 +1,28 @@
+{
+	"TestCase":"create Study 199",
+    "PreCodition":{"ClearDesk":"true","APP":"DFadmin.app"},
+    "ImageFolder":"/rong/",
+    "steps":[
+        {"type":"ScreenShot","text":"take a ScreenShot"},
+        {"type":"dbclick","text":"datafax","pic":"app.png"},
+        {"type":"Input","text":"datafax","pic":"step1.png"},
+        {"type":"Input","text":"ski2live","pic":"step2.png"},
+        {"type":"click","text":"Login ","pic":"step3.png"},
+        {"type":"ScreenShot","text":"take a ScreenShot"},
+        {"type":"click","text":"New ","pic":"step4.png"},
+        {"type":"ScreenShot","text":"take a ScreenShot"},
+        {"type":"Input","text":"199","pic":"step5.png"},
+        {"type":"Input","text":"Test200","pic":"step6.png"},
+        {"type":"ScreenShot","text":"take a ScreenShot"},
+        {"type":"click","text":"select folder","pic":"step7.png"},
+        {"type":"ScreenShot","text":"take a ScreenShot"},
+        {"type":"click","text":"select folder","pic":"step8.png"},
+        {"type":"Input","text":"test200","pic":"step9.png"},
+        {"type":"ScreenShot","text":"take a ScreenShot"},
+        {"type":"click","text":"test200","pic":"step10.png"},
+        {"type":"Result","text":"test200","pic":"result2.png"}
+
+    ],
+    "Result":"",
+    "ClearStep":"NONE"
+}
