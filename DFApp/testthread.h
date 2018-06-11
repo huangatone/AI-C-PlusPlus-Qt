@@ -24,17 +24,23 @@ public:
 	bool bStop() const;
 	void setBStop(bool bStop);
 
+
+
+	void doText(QString pix_file, QString text);
+	void doClick(QString pix_file);
+	void doDBClick(QString pix_file);
+	bool doResult(QString pix_file);
+	void doTakeScreenshot(QString img_file);
+	bool doTest(QJsonObject obj);
+
+
 signals:
 	void result_message(QString);
 
 protected:
 	void run();
 
-	void doText(QString pix_file, QString text);
-	void doClick(QString pix_file);
-	bool doResult(QString pix_file);
-	void doTakeScreenshot(QString img_file);
-	bool doTest(QJsonObject obj);
+
 
 	QString _screen_shot_file;
 	QString _img_folder;

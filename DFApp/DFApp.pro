@@ -36,7 +36,8 @@ SOURCES += \
     testwidget.cpp \
     mycv.cpp \
     osevent.cpp \
-    testthread.cpp
+    testthread.cpp \
+    testtmpwidget.cpp
 
 
 HEADERS += \
@@ -48,7 +49,8 @@ HEADERS += \
     testwidget.h \
     mycv.h \
     osevent.h \
-    testthread.h
+    testthread.h \
+    testtmpwidget.h
 
 
 FORMS += \
@@ -57,7 +59,8 @@ FORMS += \
     clientwidget.ui \
     autotestwidget.ui \
     testdialog.ui \
-    testwidget.ui
+    testwidget.ui \
+    testtmpwidget.ui
 
  mac: {
 

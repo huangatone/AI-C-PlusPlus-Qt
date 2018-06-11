@@ -38,6 +38,8 @@ void TestThread::clear()
 
 void TestThread::run()
 {
+	_bStop = false;
+	_bPause = false;
 	foreach (auto obj, _case_list)
 	{
 		while(_bPause)
@@ -82,6 +84,20 @@ void TestThread::doClick(QString pix_file)
 
 	QPixmap pix(img_file);
 	click(pos.x()+pix.width()/2 ,pos.y()+pix.height()/2);
+
+	sleep(1);
+}
+
+void TestThread::doDBClick(QString pix_file)
+{
+	auto img_file =  pix_file;
+	qDebug() << img_file;
+
+	auto pos= MatchingMethod( _screen_shot_file,img_file,4);
+	qDebug() << "pos " << pos ;
+
+	QPixmap pix(img_file);
+	dbclick(pos.x()+pix.width()/2 ,pos.y()+pix.height()/2);
 
 	sleep(1);
 }
@@ -136,7 +152,7 @@ bool TestThread::doTest(QJsonObject obj)
 	auto isClearDesk = pre["ClearDesk"].toString();
 
 	s.waitForFinished(-1);
-	s.start("open /Applications/DFdiscover 5.0.0/"  + app );
+	s.startDetached("open \"/Applications/DFdiscover 5.0.0/"  + app + "\"" );//start
 	//s.start("open /rong/"  + app );
 
 	s.waitForFinished(-1);
@@ -150,6 +166,52 @@ bool TestThread::doTest(QJsonObject obj)
 	auto steps = obj["steps"].toArray();
 	auto img_folder = obj["ImageFolder"].toString();
 	int step_index = 1;
+	bool res = false;
+	foreach(auto s, steps)
+	{
+		while(_bPause)
+		{
+			sleep(1);
+		}
+		if(_bStop )
+			break;
+
+
+		sleep(1);
+
+		auto so = s.toObject();
+		qDebug() <<"Step " << step_index <<  so["type"].toString() << so["text"].toString();
+		if(so["type"].toString().compare( "ScreenShot",Qt::CaseInsensitive) == 0)
+		{
+			screen->grabWindow(app_desk->screen(0)->winId(),0,0,app_desk->screen(0)->geometry().width()/2,app_desk->screen(0)->geometry().height()/2).save(_screen_shot_file,"PNG");
+			continue;
+		}
+
+		auto img_file = img_folder + so["pic"].toString();
+		auto str = so["text"].toString();
+
+		qDebug() << img_file;
+		if(so["type"].toString().compare("click",Qt::CaseInsensitive) ==0 )
+		{
+			doClick(img_file);
+		}
+		else if(so["type"].toString().compare("dbclick",Qt::CaseInsensitive) ==0 )
+		{
+			doDBClick(img_file);
+		}
+		else if(so["type"].toString().compare("input",Qt::CaseInsensitive) ==0 )
+		{
+			doText(img_file,str);
+		}
+		else if(so["type"].toString().compare("result",Qt::CaseInsensitive) == 0)
+		{
+			res = doResult(img_file);
+		}
+		step_index++;
+	}
+
+	qDebug() << "Clear -------";
+	steps = obj["clearup"].toArray();
 	foreach(auto s, steps)
 	{
 		sleep(1);
@@ -170,6 +232,10 @@ bool TestThread::doTest(QJsonObject obj)
 		{
 			doClick(img_file);
 		}
+		else if(so["type"].toString().compare("dbclick",Qt::CaseInsensitive) ==0 )
+		{
+			doDBClick(img_file);
+		}
 		else if(so["type"].toString().compare("input",Qt::CaseInsensitive) ==0 )
 		{
 			doText(img_file,str);
@@ -181,8 +247,10 @@ bool TestThread::doTest(QJsonObject obj)
 		step_index++;
 	}
 
+
+
 	qDebug() << "End Case -----"<< case_name.toString();
-	return false;
+	return res;
 }
 
 bool TestThread::bStop() const

@@ -5,6 +5,7 @@
 #include "clientwidget.h"
 #include "autotestwidget.h"
 #include "testwidget.h"
+#include "testtmpwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
 	StyleWindow(parent)
@@ -13,8 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMenuBar *pBar = new QMenuBar(this);
 
 	QMenu* view = new QMenu(tr("View"),this);
+	QAction* ac;
 
-	ServerWidget* s= new ServerWidget(this);
+	/*ServerWidget* s= new ServerWidget(this);
 	addSubWindow(s);
 	auto ac = view->addAction( tr("Server"));
 	connect( ac, SIGNAL(triggered()), this, SLOT(slot_view_item()));
@@ -22,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	addSubWindow(c);
 	ac = view->addAction( tr("Client"));
 	connect( ac, SIGNAL(triggered()), this, SLOT(slot_view_item()));
-
+*/
 	AutoTestWidget * a = new AutoTestWidget(this);
 	addSubWindow(a);
 	ac = view->addAction( tr("Test"));
@@ -34,11 +36,17 @@ MainWindow::MainWindow(QWidget *parent) :
 	ac = view->addAction( tr("AutoTest"));
 	connect( ac, SIGNAL(triggered()), this, SLOT(slot_view_item()));
 
+
+	TestTmpWidget * tmp = new TestTmpWidget(this);
+	addSubWindow(tmp);
+	ac = view->addAction( tr("Tmp widget"));
+	connect( ac, SIGNAL(triggered()), this, SLOT(slot_view_item()));
+
 	pBar->addMenu(view);
 	setMenuBar(pBar);
-	setCurrentWidget(3);
+	setCurrentWidget(1);
 
-	_view_menu_items << "Server" << "Client" << "Test" << "AutoTest";
+	_view_menu_items << /*"Server" << "Client" << */ "Test" << "AutoTest" << "Tmp widget";
 }
 
 MainWindow::~MainWindow()

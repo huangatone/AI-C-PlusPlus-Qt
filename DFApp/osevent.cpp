@@ -22,12 +22,33 @@ void click(int x, int y)
 	CFRelease(theEvent);
 }
 
+void dbclick(int x, int y)
+{
+	qDebug() <<"dbclick at" <<  x << y;
+	CGEventRef theEvent = CGEventCreateMouseEvent(NULL, kCGEventLeftMouseDown, CGPointMake(x, y), kCGMouseButtonLeft);
+	CGEventPost(kCGHIDEventTap, theEvent);
+	CGEventSetType(theEvent, kCGEventLeftMouseUp);
+	CGEventPost(kCGHIDEventTap, theEvent);
+
+	CGEventSetIntegerValueField(theEvent, kCGMouseEventClickState, 2);
+
+	CGEventSetType(theEvent, kCGEventLeftMouseDown);
+	CGEventPost(kCGHIDEventTap, theEvent);
+
+	CGEventSetType(theEvent, kCGEventLeftMouseUp);
+	CGEventPost(kCGHIDEventTap, theEvent);
+
+	CFRelease(theEvent);
+
+}
+
 
 void key(char ch)
 {
 	CGKeyCode k = QtKeyCode2MacKeyCode(ch);
 	CGEventRef mkey = CGEventCreateKeyboardEvent(NULL, k, true);
-	//CGEventSetFlags(mkey, kCGEventFlagMaskShift);//set shift key down for above event
+	if(getFlags(ch))
+		CGEventSetFlags(mkey, kCGEventFlagMaskShift);//set shift key down for above event
 	CGEventPost(kCGHIDEventTap, mkey);
 	CFRelease(mkey);
 }
@@ -36,24 +57,34 @@ CGKeyCode QtKeyCode2MacKeyCode(char k)
 {
 	switch(k){
 	case '0':
+	case ')':
 		return kVK_ANSI_0;
 	case '1':
+	case '!':
 		return kVK_ANSI_1;
 	case '2':
+	case '@':
 		return kVK_ANSI_2;
 	case '3':
+	case '#':
 		return kVK_ANSI_3;
 	case '4':
+	case '$':
 		return kVK_ANSI_4;
 	case '5':
+	case '%':
 		return kVK_ANSI_5;
 	case '6':
+	case '^':
 		return kVK_ANSI_6;
 	case '7':
+	case '&':
 		return kVK_ANSI_7;
 	case '8':
+	case '*':
 		return kVK_ANSI_8;
 	case '9':
+	case '(':
 		return kVK_ANSI_9;
 	case 'q':
 	case 'Q':
@@ -133,56 +164,96 @@ CGKeyCode QtKeyCode2MacKeyCode(char k)
 	case 'M':
 	case 'm':
 		return kVK_ANSI_M;
-	case Qt::Key_F1:
-		return kVK_F1;
-	case Qt::Key_F2:
-		return kVK_F2;
-	case Qt::Key_F3:
-		return kVK_F3;
-	case Qt::Key_F4:
-		return kVK_F4;
-	case Qt::Key_F5:
-		return kVK_F5;
-	case Qt::Key_F6:
-		return kVK_F6;
-	case Qt::Key_F7:
-		return kVK_F7;
-	case Qt::Key_F8:
-		return kVK_F8;
-	case Qt::Key_F9:
-		return kVK_F9;
-	case Qt::Key_F10:
-		return kVK_F10;
-	case Qt::Key_F11:
-		return kVK_F11;
-	case Qt::Key_F12:
-		return kVK_F12;
-	case Qt::Key_Left:
-		return kVK_LeftArrow;
-	case Qt::Key_Right:
-		return kVK_RightArrow;
-	case Qt::Key_Down:
-		return kVK_DownArrow;
-	case Qt::Key_Up:
-		return kVK_UpArrow;
-	case Qt::Key_Return:
-		return kVK_Return;
-	case Qt::Key_Tab:
-		return kVK_Tab;
-	case Qt::Key_Space:
-		return kVK_Space;
-	case Qt::Key_Delete:
-		return kVK_Delete;
-	case Qt::Key_Escape:
-		return kVK_Escape;
-	case Qt::Key_Shift:
-		return kVK_Shift;
-	case Qt::Key_Control:
-		return kVK_Control;
-	case Qt::Key_CapsLock:
-		return kVK_CapsLock;
+	case ';':
+	case ':':
+		return kVK_ANSI_Semicolon;
+	case '\'':
+	case '\"':
+		return kVK_ANSI_Quote;
+	case ',':
+	case '<':
+		return kVK_ANSI_Comma; //,
+	case '.':
+	case '>':
+		return kVK_ANSI_Period;
+	case '/':
+	case '?':
+		return kVK_ANSI_Backslash;
+	case '\\':
+	case '|':
+		return kVK_ANSI_Slash;
+	case '{':
+	case '[':
+		return kVK_ANSI_LeftBracket;
+	case '}':
+	case ']':
+		return kVK_ANSI_RightBracket;
+	case '-':
+	case '_':
+		return kVK_ANSI_Minus;
+	case '=':
+	case '+':
+		return kVK_ANSI_Equal;
 	default:
-		return kVK_Escape;
+	return kVK_Escape;
 	}
+
+}
+
+
+
+bool getFlags(char k)
+{
+	switch(k)
+	{
+		case ')':
+		case '!':
+		case '@':
+		case '#':
+		case '$':
+		case '%':
+		case '^':
+		case '&':
+		case '*':
+		case '(':
+		case 'Q':
+		case 'W':
+		case 'E':
+		case 'R':
+		case 'T':
+		case 'Y':
+		case 'U':
+		case 'I':
+		case 'O':
+		case 'P':
+		case 'A':
+		case 'S':
+		case 'D':
+		case 'F':
+		case 'G':
+		case 'H':
+		case 'J':
+		case 'K':
+		case 'L':
+		case 'Z':
+		case 'X':
+		case 'C':
+		case 'V':
+		case 'B':
+		case 'N':
+		case 'M':
+		case ':':
+		case '"':
+		case '<':
+		case '>':
+		case '?':
+		case '{':
+		case '}':
+		case '_':
+		case '+':
+		case '|':
+			return true;
+	}
+	return false;
 
 }
