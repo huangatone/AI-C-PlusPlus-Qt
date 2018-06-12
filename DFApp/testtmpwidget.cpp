@@ -10,7 +10,7 @@
 
 #include <QDesktopWidget>
 #include <QScreen>
-
+#include <QMessageBox>
 
 #include "osevent.h"
 #include "mycv.h"
@@ -21,6 +21,7 @@ TestTmpWidget::TestTmpWidget(QWidget *parent) :
 {
 	ui->setupUi(this);
 	_test_thread =  new TestThread(this);
+	_test_img = "";
 }
 
 TestTmpWidget::~TestTmpWidget()
@@ -34,9 +35,9 @@ TestTmpWidget::~TestTmpWidget()
 void TestTmpWidget::on_pushButton_clicked()
 {
 	//dbclick(163,325);
-	_test_thread->doTakeScreenshot("/rong/screen_shot.png");
-	_test_thread-> doDBClick("/rong/app.png");
-	return;
+	//_test_thread->doTakeScreenshot("/rong/screen_shot.png");
+	//_test_thread-> doDBClick("/rong/app.png");
+	//return;
 	//int md = ui->lineEdit_3->text().toInt();
 	//MatchingMethod( _src_file,_dst_file,md);
 	//MatchingMethod( QString("/rong/s1.png"),QString("/rong/dst.png"),md);
@@ -83,6 +84,7 @@ void TestTmpWidget::on_toolButton_2_clicked()
 	if(a.isEmpty())
 		return;
 	ui->label_2->setPixmap( QPixmap(a));
+	_test_img = a;
 }
 
 //take a screen shot of screen 1;
@@ -100,53 +102,11 @@ void TestTmpWidget::on_btnProcess_clicked()
 	auto txt = ui->lineEdit_6->text();
 	//s.start( txt);
 	click(100,200);
-	s.start("open \"" + txt + "\"");
-
+	s.startDetached("open \"" + txt + "\"");
+	sleep(1);
+	qDebug()<< "After";
 }
 
-int shiftKeyCode = 56;
-bool shiftIsDown = false;
-
-void postKeyboardEvent( int keyCode, bool keyUp = false )
-{
-
-
-
-	if( keyCode == shiftKeyCode ){
-
-		if( keyUp ){
-
-			shiftIsDown = false;
-
-		}else{
-
-			shiftIsDown = true;
-
-		}
-
-	}
-
-	CGEventSourceRef source = CGEventSourceCreate( kCGEventSourceStateHIDSystemState );
-	CGEventRef keyEvent = CGEventCreateKeyboardEvent( source, (CGKeyCode) keyCode, !keyUp );
-
-	if( shiftIsDown ){
-
-		// Use Shift flag
-		CGEventSetFlags( keyEvent, CGEventGetFlags( keyEvent ) | kCGEventFlagMaskShift );
-
-	}else{
-
-		// Use all existing flag except Shift
-		CGEventSetFlags( keyEvent, CGEventGetFlags( keyEvent ) & ~kCGEventFlagMaskShift );
-
-	}
-
-	CGEventPost( kCGHIDEventTap, keyEvent );
-
-	CFRelease( keyEvent );
-	CFRelease( source );
-
-}
 
 void TestTmpWidget::on_btnKey_clicked()
 {
@@ -179,4 +139,37 @@ void TestTmpWidget::on_btnKey_clicked()
 	CFRelease(ev);
 
 	CFRelease(source);
+}
+
+void TestTmpWidget::on_btnText_clicked()
+{
+	if(_test_img.isEmpty() || ui->lineEdit_8->text().isEmpty())
+	{
+		QMessageBox::warning(this,"No Img or text", "Please spicefy image and text");
+		return;
+	}
+	_test_thread->doTakeScreenshot("/rong/screen_shot.png");
+	_test_thread->doText( _test_img, ui->lineEdit_8->text());
+}
+
+void TestTmpWidget::on_pushButton_3_clicked()
+{
+	if(_test_img.isEmpty() )
+	{
+		QMessageBox::warning(this,"No Img ", "Please spicefy image ");
+		return;
+	}
+	_test_thread->doTakeScreenshot("/rong/screen_shot.png");
+	_test_thread->doClick( _test_img);
+}
+
+void TestTmpWidget::on_btnDBClick_clicked()
+{
+	if(_test_img.isEmpty() )
+	{
+		QMessageBox::warning(this,"No Img ", "Please spicefy image ");
+		return;
+	}
+	_test_thread->doTakeScreenshot("/rong/screen_shot.png");
+	_test_thread->doDBClick( _test_img);
 }

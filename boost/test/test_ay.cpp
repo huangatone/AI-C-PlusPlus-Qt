@@ -38,19 +38,23 @@ void notice_fun()
     char buffer[256];
     while(true)
     {
+    	int n = rand() % 500;
         //get msg from ui
         printf("Please enter the message: ");
-        bzero(buffer,256);
-        fgets(buffer,255,stdin);
-        msg_lst.push_back(buffer);
+        //bzero(buffer,256);
+        //fgets(buffer,255,stdin);
+        unique_lock<mutex> lock{ _lock };
+        msg_lst.push_back( to_string(n));
         _task_cv.notify_one(); // 唤醒一个线程执行
-        
+
+        std::this_thread::sleep_for( std::chrono::microseconds(n) );        
     }
     
 }
 
 int main()
 {
+	srand (time(NULL));
 	msg_lst.push_back("A1");
 	msg_lst.push_back("A2");
 	msg_lst.push_back("A3");

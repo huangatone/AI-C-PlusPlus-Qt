@@ -1,0 +1,21 @@
+{
+	"TestCase":"Open DFsetup",
+    "PreCodition":{"ClearDesk":"true","APP":"/Applications/DFdiscover 5.0.0/DFsetup.app"},
+    "ImageFolder":"/rong/",
+    "steps":[
+ 
+        {"type":"Input","text":"datafax","pic":"step1.png"},
+        {"type":"Input","text":"ski2live","pic":"step2.png"},
+        {"type":"click","text":"Login ","pic":"step3.png"}
+        
+
+    ],
+    "Result":"",
+    "clearup":
+    [       
+        {"type":"ScreenShot","text":"take a ScreenShot"},
+        {"type":"click","text":"Close DFsetup ","pic":"clear_step2.png"}
+    ],
+    
+    "ClearStep":"NONE"
+}

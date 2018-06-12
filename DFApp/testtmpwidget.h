@@ -24,9 +24,16 @@ private slots:
 
 	void on_btnKey_clicked();
 
+	void on_btnText_clicked();
+
+	void on_pushButton_3_clicked();
+
+	void on_btnDBClick_clicked();
+
 private:
 	Ui::TestTmpWidget *ui;
 	TestThread* _test_thread;
+	QString _test_img;
 
 	QProcess s;
 };

@@ -51,8 +51,9 @@ void TestThread::run()
 
 		bool res = doTest(obj);
 		qDebug() << obj["TestCase"] << res;
-		emit result_message("finised case");
+
 	}
+	emit result_message("finished");
 }
 
 void TestThread::doText(QString pix_file,QString text)
@@ -72,6 +73,7 @@ void TestThread::doText(QString pix_file,QString text)
 	{
 		key(ch);
 	}
+	sleep(1);
 }
 
 void TestThread::doClick(QString pix_file)
@@ -107,6 +109,7 @@ void TestThread::doTakeScreenshot(QString img_file)
 	QDesktopWidget* app_desk = QApplication::desktop();
 	QScreen *screen = QGuiApplication::primaryScreen();
 	screen->grabWindow(app_desk->screen(0)->winId(),0,0,app_desk->screen(0)->geometry().width()/2,app_desk->screen(0)->geometry().height()/2).save(img_file,"PNG");
+	sleep(1);
 }
 
 
@@ -136,6 +139,7 @@ bool TestThread::doResult(QString pix_file)
 		qDebug() << " Matched ";
 	else
 		qDebug() << " un Matched ";
+	sleep(1);
 	return ( r < 0.05);
 }
 
@@ -152,10 +156,12 @@ bool TestThread::doTest(QJsonObject obj)
 	auto isClearDesk = pre["ClearDesk"].toString();
 
 	s.waitForFinished(-1);
-	s.startDetached("open \"/Applications/DFdiscover 5.0.0/"  + app + "\"" );//start
+	click(100,200);//make the new application start at prime scrren
+	s.startDetached("open \""  + app + "\"" );//start
 	//s.start("open /rong/"  + app );
 
 	s.waitForFinished(-1);
+	sleep(5);
 	qDebug() << "finished";
 
 	QString s_file = _screen_shot_file;
@@ -177,7 +183,6 @@ bool TestThread::doTest(QJsonObject obj)
 			break;
 
 
-		sleep(1);
 
 		auto so = s.toObject();
 		qDebug() <<"Step " << step_index <<  so["type"].toString() << so["text"].toString();
@@ -206,6 +211,7 @@ bool TestThread::doTest(QJsonObject obj)
 		else if(so["type"].toString().compare("result",Qt::CaseInsensitive) == 0)
 		{
 			res = doResult(img_file);
+			emit  result_message( case_name.toString()  + (res? " - Succed":" - Failed"));
 		}
 		step_index++;
 	}
@@ -214,7 +220,12 @@ bool TestThread::doTest(QJsonObject obj)
 	steps = obj["clearup"].toArray();
 	foreach(auto s, steps)
 	{
-		sleep(1);
+		while(_bPause)
+		{
+			sleep(1);
+		}
+		if(_bStop )
+			break;
 
 		auto so = s.toObject();
 		qDebug() <<"Step " << step_index <<  so["type"].toString() << so["text"].toString();
