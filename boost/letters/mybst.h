@@ -73,6 +73,8 @@ class BSTree {
 
 		int depth();
 
+		size_t LeafSize();
+
 	private:
 		// 前序遍历"二叉树"
 		void preOrder(BSTNode<T>* tree) const;
@@ -109,6 +111,7 @@ class BSTree {
 		ofstream outdata;
 		void save(BSTNode<T>* tree, T key, int direction);
 		void save(vector< T >  &lt,BSTNode<T>* tree, T key, int direction);
+		size_t _LeafSize(BSTNode<T> *root);
 
 
 };
@@ -578,5 +581,22 @@ int BSTree<T>::depth()
 	return depth(mRoot);
 	
 }
+
+template <class T>
+size_t BSTree<T>::LeafSize()
+  {
+    return _LeafSize(mRoot);
+  }
+ template <class T>
+  size_t BSTree<T>::_LeafSize(BSTNode<T> *root)
+  {
+    if (root == NULL)
+      return 0;
+    else if (root->_left == NULL && root->_right == NULL)
+      return 1;
+    else
+      return _LeafSize(root->left) + _LeafSize(root->right);
+  }
+
 
 #endif // MYBST_H
